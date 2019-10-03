@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WebApiSegura.Security
+namespace IntegrationAPIs.Security
 {
 
     internal static class TokenGenerator
@@ -11,8 +11,8 @@ namespace WebApiSegura.Security
         public static string GenerateTokenJwt(string username, string rolname)
         {
             var secretKey = "20EE6F5DeyJzdWIiOiIxMDE4NDU0MzY5IiwibmFtZSI6IkRhbmlsbyBDYW50yMzkwMjJ9b3IiLCJpYXQiOjE1MTY0253#Mluf75AwBCCG7Ijl64bZRZo7uaQGbpA4AE7oTJUeaCc3v9xADB1&CE7658djclEF71D0";
-            var audienceToken = ConfigurationManager.AppSettings["JWT_AUDIENCE_TOKEN"];
-            var issuerToken = ConfigurationManager.AppSettings["JWT_ISSUER_TOKEN"];
+            var audienceToken = "http://localhost:12711";
+            var issuerToken = "http://localhost:12711";
 
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.Default.GetBytes(secretKey));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);

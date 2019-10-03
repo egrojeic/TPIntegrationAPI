@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WebApiSegura.Security
+namespace IntegrationAPIs.Security
 {
     /// <summary>
     /// Token validator for Authorization Request using a DelegatingHandler
@@ -43,9 +43,9 @@ namespace WebApiSegura.Security
 
             try
             {
-                var secretKey = ConfigurationManager.AppSettings["JWT_SECRET_KEY"];
-                var audienceToken = ConfigurationManager.AppSettings["JWT_AUDIENCE_TOKEN"];
-                var issuerToken = ConfigurationManager.AppSettings["JWT_ISSUER_TOKEN"];
+                var secretKey = "20EE6F5DeyJzdWIiOiIxMDE4NDU0MzY5IiwibmFtZSI6IkRhbmlsbyBDYW50yMzkwMjJ9b3IiLCJpYXQiOjE1MTY0253#Mluf75AwBCCG7Ijl64bZRZo7uaQGbpA4AE7oTJUeaCc3v9xADB1&CE7658djclEF71D0";
+                var audienceToken = "http://localhost:12711";
+                var issuerToken = "http://localhost:12711";
                 var securityKey = new SymmetricSecurityKey(System.Text.Encoding.Default.GetBytes(secretKey));
 
                 SecurityToken securityToken;
