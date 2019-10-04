@@ -8,6 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.IdentityModel.Tokens;
+using IntegrationAPIs.Models;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace IntegrationAPIs.Security
 {
@@ -33,7 +36,7 @@ namespace IntegrationAPIs.Security
         {
             HttpStatusCode statusCode;
             string token;
-
+            
             // determine whether a jwt exists or not
             if (!TryRetrieveToken(request, out token))
             {
@@ -75,7 +78,11 @@ namespace IntegrationAPIs.Security
                 statusCode = HttpStatusCode.InternalServerError;
             }
 
-            return Task<HttpResponseMessage>.Factory.StartNew(() => new HttpResponseMessage(statusCode) { });
+            MsgResponse response = new MsgResponse();
+            response.Message = "Invalid TOKEN";
+            response.StatusCode = statusCode.ToString();
+
+            return Task<HttpResponseMessage>.Factory.StartNew(() => new HttpResponseMessage(statusCode) { Content = new StringContent(JsonConvert.SerializeObject(response, Formatting.Indented), Encoding.UTF8, "application/json") });
         }
 
         public bool LifetimeValidator(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)

@@ -37,7 +37,6 @@ namespace IntegrationAPIs.Controllers
                 return Ok(token);
             }
 
-            // Unauthorized access 
             return Unauthorized();
         }
     }

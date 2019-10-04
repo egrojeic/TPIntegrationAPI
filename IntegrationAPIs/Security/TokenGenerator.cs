@@ -2,13 +2,14 @@
 using System.Configuration;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using IntegrationAPIs.Models;
 
 namespace IntegrationAPIs.Security
 {
 
     internal static class TokenGenerator
     {
-        public static string GenerateTokenJwt(string username, string rolname)
+        public static TokenResponse GenerateTokenJwt(string username, string rolname)
         {
             var secretKey = "20EE6F5DeyJzdWIiOiIxMDE4NDU0MzY5IiwibmFtZSI6IkRhbmlsbyBDYW50yMzkwMjJ9b3IiLCJpYXQiOjE1MTY0253#Mluf75AwBCCG7Ijl64bZRZo7uaQGbpA4AE7oTJUeaCc3v9xADB1&CE7658djclEF71D0";
             var audienceToken = "http://localhost:12711";
@@ -32,7 +33,12 @@ namespace IntegrationAPIs.Security
                 signingCredentials: signingCredentials);
 
             var jwtTokenString = tokenHandler.WriteToken(jwtSecurityToken);
-            return jwtTokenString;
+
+            TokenResponse response = new TokenResponse();
+            response.Token = jwtTokenString;
+            response.ExpireDate = DateTime.UtcNow.AddMonths(Convert.ToInt32(3)).ToString("MM-dd-yyyy");
+
+            return response;
         }
     }
 }
