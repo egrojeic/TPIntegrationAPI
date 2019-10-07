@@ -7,11 +7,13 @@ namespace IntegrationAPIs.Models
 {
     public class Orders
     {
+        public int ID { get; set; }
         public string PO { get; set; }
         public int OrderCode { get; set; }
         public string FarmShipDate { get; set; }
         public string MiamiShipDate { get; set; }
         public string DeliveryDate { get; set; }
+        public string PullDate { get; set; }
         public string Status { get; set; }
         public int CustomerCode { get; set; }
         public string Customer { get; set; }

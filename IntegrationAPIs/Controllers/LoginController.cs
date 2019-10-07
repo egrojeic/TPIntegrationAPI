@@ -25,7 +25,7 @@ namespace IntegrationAPIs.Controllers
             if (login == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            string strSQL = "EXEC ValidaUsuarioAPI " + login.Username + ", " + login.Password;
+            string strSQL = "EXEC ValidaUsuarioAPI '" + login.Username + "', '" + login.Password + "'";
 
             int tmpUsuarioValido = 0;
             tmpUsuarioValido = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));

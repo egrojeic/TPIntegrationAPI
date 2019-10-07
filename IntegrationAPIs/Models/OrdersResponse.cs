@@ -8,6 +8,6 @@ namespace IntegrationAPIs.Models
     public class OrdersResponse
     {
         public List<Orders> Orders { get; set; }
-        public MsgResponse Message { get; set; }
+        public MsgResponse Response { get; set; }
     }
 }

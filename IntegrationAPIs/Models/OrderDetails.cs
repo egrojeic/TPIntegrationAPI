@@ -7,6 +7,7 @@ namespace IntegrationAPIs.Models
 {
     public class OrderDetails
     {
+        public int ID { get; set; }
         public string CodeBoxProduct { get; set; }
         public string BoxProduct { get; set; }
         public int Pack { get; set; }

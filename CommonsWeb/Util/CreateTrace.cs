@@ -120,6 +120,49 @@ namespace Common
 
         }
 
+        /// <summary>
+        /// Escribe en el DataBase log a traves de un string
+        /// </summary>
+        /// <param name="logText">Texto a ser guardado en el log</param>
+        public static void WriteLogToDB(LogLevel loglevel, string logTitle, string logText)
+        {
+
+            CreateTrace Log = new CreateTrace();
+
+            switch (loglevel)
+            {
+                case LogLevel.Debug:
+                    //if (Settings.Default.Debug == true)
+                    escribir(DateTime.Now.ToString(Formato) + " [" + loglevel + "]      :" + Log.DatosInvocacion + logText, Log.fileName);
+                    break;
+
+                case LogLevel.Information:
+                    //if (Settings.Default.Information == true)
+                    escribir(DateTime.Now.ToString(Formato) + " [" + loglevel + "]:" + Log.DatosInvocacion + logText, Log.fileName);
+                    break;
+
+                case LogLevel.Warning:
+                    //if (Settings.Default.Warning == true)
+                    escribir(DateTime.Now.ToString(Formato) + " [" + loglevel + "]    :" + Log.DatosInvocacion + logText, Log.fileName);
+                    break;
+
+                case LogLevel.Error:
+                    //if (Settings.Default.Error == true)
+                    escribir(DateTime.Now.ToString(Formato) + " [" + loglevel + "]      :" + Log.DatosInvocacion + logText, Log.fileName);
+                    break;
+
+                case LogLevel.Fatal:
+                    //if (Settings.Default.Fatal == true)
+                    escribir(DateTime.Now.ToString(Formato) + " [" + loglevel + "]      :" + Log.DatosInvocacion + logText, Log.fileName);
+                    break;
+
+                default:
+                    //if (Settings.Default.Information == true)
+                    escribir(DateTime.Now.ToString(Formato) + " - [" + loglevel + "]: " + Log.DatosInvocacion + logText, Log.fileName);
+                    break;
+            }
+
+        }
 
         /// <summary>
         /// Escribe en el log a traves de una excepcion
