@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,7 +8,8 @@ namespace IntegrationAPIs.Models
 {
     public class Orders
     {
-        public int ID { get; set; }
+        [JsonIgnore]
+        public int ID { get; set; } 
         public string PO { get; set; }
         public int OrderCode { get; set; }
         public string FarmShipDate { get; set; }

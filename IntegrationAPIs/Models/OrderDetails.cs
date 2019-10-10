@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +8,7 @@ namespace IntegrationAPIs.Models
 {
     public class OrderDetails
     {
+        [JsonIgnore]
         public int ID { get; set; }
         public string CodeBoxProduct { get; set; }
         public string BoxProduct { get; set; }
@@ -19,6 +21,6 @@ namespace IntegrationAPIs.Models
         public string PullDateWithFormat { get; set; }
         public string UPC { get; set; }
         public Decimal UPCRetailPrice { get; set; }
-        //public List<RecetaRamo> RecetaRamo { get; set; }
+        public List<OrderBunchDetails> Bunches { get; set; }
     }
 }

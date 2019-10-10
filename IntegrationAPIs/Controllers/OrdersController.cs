@@ -26,7 +26,7 @@ namespace IntegrationAPIs.Controllers
 
             try
             {
-                tmpFarm = HttpContext.Current.User.ToString();
+                tmpFarm = HttpContext.Current.User.Identity.Name.ToString();
 
                 if (tmpFarm != "")
                 {

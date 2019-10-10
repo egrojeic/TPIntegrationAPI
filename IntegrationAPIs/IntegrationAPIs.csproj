@@ -141,7 +141,10 @@
     </Compile>
     <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Models\MsgResponse.cs" />
+    <Compile Include="Models\OrderBunchDetails.cs" />
     <Compile Include="Models\OrderDetails.cs" />
+    <Compile Include="Models\OrderFlowerDetails.cs" />
+    <Compile Include="Models\OrderMaterialDetails.cs" />
     <Compile Include="Models\Orders.cs" />
     <Compile Include="Models\OrdersRequest.cs" />
     <Compile Include="Models\OrdersResponse.cs" />

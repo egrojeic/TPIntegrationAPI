@@ -15,15 +15,19 @@ namespace IntegrationAPIs.Bussines.Ordenes
         public OrdersResponse GetOrders(string prmFarm)
         {
             OrdersResponse ResponseOrders = new OrdersResponse();
+            ResponseOrders.Response = new MsgResponse();
 
             try
             {
                 string strSQL = "";
                 DataSet dsOrdenes;
                 List<Orders> LstOrders = new List<Orders>();
-                List<OrderDetails> LstOrdersDetails = new List<OrderDetails>();
+                List<OrderDetails> LstDetalles = new List<OrderDetails>();
+                List<OrderBunchDetails> LstRamos = new List<OrderBunchDetails>();
+                List<OrderMaterialDetails> LstMateriales = new List<OrderMaterialDetails>();
+                List<OrderFlowerDetails> LstTallos = new List<OrderFlowerDetails>();
 
-                strSQL = "EXEC ConsultaOrdenesAPI " + prmFarm;
+                strSQL = "EXEC ConsultaOrdenesAPI '" + prmFarm + "'";
                 dsOrdenes = SQLConection.ExecuteProcedureToDataSet(strSQL);
 
                 if (dsOrdenes != null && dsOrdenes.Tables[0].Rows.Count > 0)
@@ -32,10 +36,76 @@ namespace IntegrationAPIs.Bussines.Ordenes
                     {
                         Orders Ordenes;
                         OrderDetails OrdenesDetalles;
+                        OrderBunchDetails Ramos;
+                        OrderFlowerDetails Tallos;
+                        OrderMaterialDetails Materiales;
 
-                        OrdenesDetalles = LstOrdersDetails.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDDetalles"]));
+                        Materiales = LstMateriales.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaMaterial"]));
+                        Tallos = LstTallos.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaTallos"]));
+                        Ramos = LstRamos.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaRamo"]));
+                        OrdenesDetalles = LstDetalles.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDDetalles"]));
                         Ordenes = LstOrders.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["ID"]));
-                       
+
+                        if (Materiales == null)
+                        {
+                            Materiales = new OrderMaterialDetails();
+                            Materiales.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaMaterial"]);
+                            Materiales.Type = Convert.ToString(dataRowOrdenes["MaterialType"]);
+                            Materiales.Material = Convert.ToString(dataRowOrdenes["Material"]);
+                            Materiales.Qty = Convert.ToInt32(dataRowOrdenes["QtyMaterial"]);
+                        }
+
+                        if (Tallos == null)
+                        {
+                            Tallos = new OrderFlowerDetails();
+                            Tallos.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaTallos"]);
+                            Tallos.Type = Convert.ToString(dataRowOrdenes["FlowerType"]);
+                            Tallos.Category = Convert.ToString(dataRowOrdenes["CategoriasFlor"]);
+                            Tallos.Color = Convert.ToString(dataRowOrdenes["Colores"]);
+                            Tallos.Flower = Convert.ToString(dataRowOrdenes["Tallo"]);
+                            Tallos.Qty = Convert.ToInt32(dataRowOrdenes["QtyTallos"]);
+                            Tallos.Grade = Convert.ToString(dataRowOrdenes["GradosFlor"]);
+                            Tallos.Quality = Convert.ToString(dataRowOrdenes["Quality"]);
+                            Tallos.Treatment = Convert.ToString(dataRowOrdenes["TratamientosFlor"]);
+                            Tallos.BloomCount = Convert.ToString(dataRowOrdenes["BloomCount"]);
+                            Tallos.TreatmentTechnique = Convert.ToString(dataRowOrdenes["TecnicaTratamiento"]);
+                            Tallos.TinctureTones = Convert.ToString(dataRowOrdenes["TonosTintura"]);
+                            Tallos.TinctureBase = Convert.ToString(dataRowOrdenes["FloresBaseTintura"]);
+                            Tallos.GlitterType = Convert.ToString(dataRowOrdenes["GlitterType"]);  
+                        }
+
+                        if (Ramos == null)
+                        {
+                            Ramos = new OrderBunchDetails();
+                            Ramos.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaRamo"]);
+                            Ramos.Bunch = Convert.ToString(dataRowOrdenes["Ramo"]);
+                            Ramos.Qty = Convert.ToInt32(dataRowOrdenes["QtyRamos"]);
+                            Ramos.Flowers = new List<OrderFlowerDetails>();
+                            Ramos.Materials = new List<OrderMaterialDetails>();
+
+                            if (Tallos != null)
+                            {
+                                Ramos.Flowers.Add(Tallos);
+                                LstTallos.Add(Tallos);
+                            }
+
+                            if (Materiales != null)
+                            {
+                                Ramos.Materials.Add(Materiales);
+                                LstMateriales.Add(Materiales);
+                            }
+                        }
+                        else
+                        {
+                            if (!Ramos.Flowers.Contains(Tallos))
+                                Ramos.Flowers.Add(Tallos);
+                            if (!Ramos.Materials.Contains(Materiales))
+                                Ramos.Materials.Add(Materiales);
+
+                            LstTallos.Add(Tallos);
+                            LstMateriales.Add(Materiales);
+                        }
+
                         if (OrdenesDetalles == null)
                         {
                             OrdenesDetalles = new OrderDetails();
@@ -51,6 +121,19 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             OrdenesDetalles.PullDateWithFormat = Convert.ToString(dataRowOrdenes["PullDateWithFormat"]);
                             OrdenesDetalles.UPC = Convert.ToString(dataRowOrdenes["UPC"]);
                             OrdenesDetalles.UPCRetailPrice = Convert.ToDecimal(dataRowOrdenes["UPCRetailPrice"]);
+                            OrdenesDetalles.Bunches = new List<OrderBunchDetails>();
+
+                            if (Ramos != null)
+                            {
+                                OrdenesDetalles.Bunches.Add(Ramos);
+                                LstRamos.Add(Ramos);
+                            }
+                        }
+                        else
+                        {
+                            if (!OrdenesDetalles.Bunches.Contains(Ramos))
+                                OrdenesDetalles.Bunches.Add(Ramos);
+                            LstRamos.Add(Ramos);
                         }
 
                         if (Ordenes == null)
@@ -72,11 +155,22 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             if (OrdenesDetalles != null)
                             {
                                 Ordenes.Details.Add(OrdenesDetalles);
+                                LstDetalles.Add(OrdenesDetalles);
                             }
+
                             LstOrders.Add(Ordenes);
                         }
-
+                        else
+                        {
+                            if (!Ordenes.Details.Contains(OrdenesDetalles))
+                                Ordenes.Details.Add(OrdenesDetalles);
+                                LstDetalles.Add(OrdenesDetalles);
+                        }
                     }
+
+                    ResponseOrders.Orders = LstOrders;
+                    ResponseOrders.Response.StatusCode = "200";
+                    ResponseOrders.Response.Message = "Ordenes de Produccion Listadas Correctamente";
                 }
                 else
                 {
