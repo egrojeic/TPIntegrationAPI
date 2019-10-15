@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -85,7 +86,7 @@ namespace CommonsWeb.DAL
             }
             catch (Exception ex)
             {
-                // Trace.WriteLine(ex.Message);
+                CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Debug, "ERROR EN CAPA DAL:ExecuteCRUD", ex.Message);
                 throw new Exception(ex.Message);
             }
             finally
@@ -133,7 +134,7 @@ namespace CommonsWeb.DAL
             }
             catch (Exception ex)
             {
-               // Trace.WriteLine(ex.Message);
+                CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Debug, "ERROR EN CAPA DAL:ExecuteScalar", ex.Message);
                 throw new Exception(ex.Message);
             }
             finally
@@ -175,7 +176,7 @@ namespace CommonsWeb.DAL
             }
             catch (Exception ex)
             {
-               // Trace.WriteLine(ex.Message);
+                CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Debug, "ERROR EN CAPA DAL:ExecuteProcedureToDataSet", ex.Message);
                 throw new Exception(ex.Message);
             }
             finally
@@ -225,7 +226,7 @@ namespace CommonsWeb.DAL
             }
             catch (Exception ex)
             {
-               // Trace.WriteLine(ex.Message);
+                CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Debug, "ERROR EN CAPA DAL:ExecuteSqlToDataSet", ex.Message);
                 throw new Exception(ex.Message);
             }
             finally
@@ -272,17 +273,17 @@ namespace CommonsWeb.DAL
 
 
 
-        private void ImprimirParametros(string procedureName, IList<SqlParameter> parameters)
-        {
-            string cadena = "[" + procedureName + "] ";
-            if (parameters != null)
-            {
-                for (int i = 0; i < parameters.Count; i++)
-                    cadena = cadena + "[" + parameters[i].ParameterName + "|" + parameters[i].Value + "]";
+        //private void ImprimirParametros(string procedureName, IList<SqlParameter> parameters)
+        //{
+        //    string cadena = "[" + procedureName + "] ";
+        //    if (parameters != null)
+        //    {
+        //        for (int i = 0; i < parameters.Count; i++)
+        //            cadena = cadena + "[" + parameters[i].ParameterName + "|" + parameters[i].Value + "]";
 
-                Common.CreateTrace.WriteLog(Common.CreateTrace.LogLevel.Debug, cadena);
-            }
-        }
+        //        Common.CreateTrace.WriteLog(Common.CreateTrace.LogLevel.Debug, cadena);
+        //    }
+        //}
 
     }
 }

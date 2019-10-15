@@ -11,14 +11,19 @@ namespace IntegrationAPIs.Bussines.Ordenes
     public class OrdersBusiness
     {
         SqlServerHelper SQLConection = new SqlServerHelper();
+        string fechaInicial = "1900/01/01";
+        string fechaFinal = "1900/01/01";
+        int codigoOrden = 0;
 
-        public OrdersResponse GetOrders(string prmFarm)
+        public OrdersResponse GetOrders(string prmFarm, OrdersRequest prmOrderRequest)
         {
             OrdersResponse ResponseOrders = new OrdersResponse();
             ResponseOrders.Response = new MsgResponse();
 
             try
             {
+                ObtenerDatos(prmOrderRequest);
+
                 string strSQL = "";
                 DataSet dsOrdenes;
                 List<Orders> LstOrders = new List<Orders>();
@@ -27,7 +32,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                 List<OrderMaterialDetails> LstMateriales = new List<OrderMaterialDetails>();
                 List<OrderFlowerDetails> LstTallos = new List<OrderFlowerDetails>();
 
-                strSQL = "EXEC ConsultaOrdenesAPI '" + prmFarm + "'";
+                strSQL = "EXEC ConsultaOrdenesAPI '" + prmFarm + "', '" + fechaInicial + "' , '" + fechaFinal + "', " + codigoOrden;
                 dsOrdenes = SQLConection.ExecuteProcedureToDataSet(strSQL);
 
                 if (dsOrdenes != null && dsOrdenes.Tables[0].Rows.Count > 0)
@@ -71,7 +76,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             Tallos.TreatmentTechnique = Convert.ToString(dataRowOrdenes["TecnicaTratamiento"]);
                             Tallos.TinctureTones = Convert.ToString(dataRowOrdenes["TonosTintura"]);
                             Tallos.TinctureBase = Convert.ToString(dataRowOrdenes["FloresBaseTintura"]);
-                            Tallos.GlitterType = Convert.ToString(dataRowOrdenes["GlitterType"]);  
+                            Tallos.GlitterType = Convert.ToString(dataRowOrdenes["GlitterType"]);
                         }
 
                         if (Ramos == null)
@@ -164,18 +169,20 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         {
                             if (!Ordenes.Details.Contains(OrdenesDetalles))
                                 Ordenes.Details.Add(OrdenesDetalles);
-                                LstDetalles.Add(OrdenesDetalles);
+                            LstDetalles.Add(OrdenesDetalles);
                         }
                     }
 
                     ResponseOrders.Orders = LstOrders;
                     ResponseOrders.Response.StatusCode = "200";
                     ResponseOrders.Response.Message = "Ordenes de Produccion Listadas Correctamente";
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", "Ordenes de Produccion Listadas Correctamente - " + strSQL);
                 }
                 else
                 {
                     ResponseOrders.Response.StatusCode = "200";
                     ResponseOrders.Response.Message = "No Existen Ordenes de Produccion";
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", "No Existen Ordenes de Produccion - " + strSQL);
                 }
             }
             catch (Exception ex)
@@ -188,6 +195,92 @@ namespace IntegrationAPIs.Bussines.Ordenes
             }
 
             return ResponseOrders;
+        }
+
+        public MsgResponse ConfirmOrders(string prmFarm, List<OrdersRequest> prmOrderRequest)
+        {
+            MsgResponse msgResponse = new MsgResponse();
+            string strSQL = "";
+            string strError = "";
+            string strConfirmadas = "";
+            int tmpRsta = 0;
+            try
+            {
+                foreach(OrdersRequest ordersConfirm in prmOrderRequest)
+                {
+                    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + ordersConfirm.OrderCode;
+                    tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
+                    
+                    if (tmpRsta == 1)
+                    {
+                        strError = strError + ordersConfirm.OrderCode + " - ";
+                    }
+                    else
+                    {
+                        strConfirmadas = strConfirmadas + ordersConfirm.OrderCode + " - ";
+                    }
+                }
+
+                msgResponse.StatusCode = "200";
+                if (strError.Length > 0)
+                {
+                    msgResponse.Message = "Ordenes con Errores " + strError;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "Ordenes de Produccion Errores - " + strError);
+                }
+                else
+                {
+                    msgResponse.Message = "Ordenes confirmadas " + strConfirmadas;
+                }
+
+                if (strConfirmadas.Length > 0)
+                {
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "Ordenes de Produccion Confirmadas - " + strConfirmadas);
+                }
+            }
+            catch (Exception ex)
+            {
+                Exception lex;
+
+                lex = ex.InnerException != null ? ex.InnerException : ex;
+                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", lex.Message);
+
+                msgResponse.StatusCode = "500";
+                msgResponse.Message = lex.Message;
+
+                throw new Exception(lex.Message, lex);
+            }
+
+            return msgResponse;
+        }
+
+        private void ObtenerDatos(OrdersRequest prmOrderRequest)
+        {
+            try
+            {
+                if (prmOrderRequest.InitialDate != null && prmOrderRequest.InitialDate != new DateTime())
+                {
+                    fechaInicial = prmOrderRequest.InitialDate.ToString("MM/dd/yyyy");
+                }
+                if (prmOrderRequest.FinalDate != null && prmOrderRequest.FinalDate != new DateTime())
+                {
+                    fechaFinal = prmOrderRequest.FinalDate.ToString("MM/dd/yyyy");
+                }
+                if (prmOrderRequest.OrderCode != 0)
+                {
+                    codigoOrden = prmOrderRequest.OrderCode;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Exception lex;
+
+
+                lex = ex.InnerException != null ? ex.InnerException : ex;
+                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN CAPA DE NEGOCIO OrdersBusiness:ObtenerDatos", lex.Message);
+                throw new Exception(lex.Message, lex);
+            }
+
         }
     }
 }
