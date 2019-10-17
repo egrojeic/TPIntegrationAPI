@@ -16,11 +16,11 @@ namespace IntegrationAPIs.Models
         public int Qty { get; set; }
         public int Stems { get; set; }
         public string Box { get; set; }
-        public Decimal UnitCost { get; set; }
-        public Decimal TotalCost { get; set; }
+        public decimal UnitCost { get; set; }
+        public decimal TotalCost { get; set; }
         public string PullDateWithFormat { get; set; }
         public string UPC { get; set; }
-        public Decimal UPCRetailPrice { get; set; }
+        public decimal UPCRetailPrice { get; set; }
         public List<OrderBunchDetails> Bunches { get; set; }
     }
 }

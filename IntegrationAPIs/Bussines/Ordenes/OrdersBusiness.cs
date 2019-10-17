@@ -197,7 +197,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
             return ResponseOrders;
         }
 
-        public MsgResponse ConfirmOrders(string prmFarm, List<OrdersRequest> prmOrderRequest)
+        public MsgResponse ConfirmOrders(string prmFarm, OrdersConfirmRequest prmOrderRequest)
         {
             MsgResponse msgResponse = new MsgResponse();
             string strSQL = "";
@@ -206,18 +206,19 @@ namespace IntegrationAPIs.Bussines.Ordenes
             int tmpRsta = 0;
             try
             {
-                foreach(OrdersRequest ordersConfirm in prmOrderRequest)
+                for (int i = 0; i < prmOrderRequest.OrderCode.Length; i++)
                 {
-                    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + ordersConfirm.OrderCode;
+                    int orderElement = prmOrderRequest.OrderCode[i];
+                    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + orderElement;
                     tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
-                    
+
                     if (tmpRsta == 1)
                     {
-                        strError = strError + ordersConfirm.OrderCode + " - ";
+                        strError = strError + orderElement + " - ";
                     }
                     else
                     {
-                        strConfirmadas = strConfirmadas + ordersConfirm.OrderCode + " - ";
+                        strConfirmadas = strConfirmadas + orderElement + " - ";
                     }
                 }
 

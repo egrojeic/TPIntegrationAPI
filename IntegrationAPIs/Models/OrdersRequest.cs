@@ -14,4 +14,11 @@ namespace IntegrationAPIs.Models
         public DateTime FinalDate { get; set; }
         public int OrderCode { get; set; }
     }
+
+    public class OrdersConfirmRequest
+    {
+        //[Required]
+        public int[] OrderCode { get; set; }
+    }
+
 }

@@ -139,6 +139,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AirbillDetails.cs" />
+    <Compile Include="Models\AirbillRequest.cs" />
     <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Models\MsgResponse.cs" />
     <Compile Include="Models\OrderBunchDetails.cs" />

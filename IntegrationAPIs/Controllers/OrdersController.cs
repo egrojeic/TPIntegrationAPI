@@ -63,7 +63,7 @@ namespace IntegrationAPIs.Controllers
 
         [HttpPost]
         [Route("Confirmation")]
-        public MsgResponse ConfirmarOrdenes(List<OrdersRequest> OrdersConfirm)
+        public MsgResponse ConfirmarOrdenes(OrdersConfirmRequest OrdersConfirm)
         {
             string tmpFarm = "";
 
