@@ -14,6 +14,7 @@ namespace CommonsWeb.DAL
     public class SqlServerHelper
     {
         private static readonly string strConexion;
+        private static readonly string strConexionLogDB;
         private static object syncRoot;
         private static SqlServerHelper instance;
 
@@ -21,6 +22,7 @@ namespace CommonsWeb.DAL
         {
             syncRoot = new Object();
             strConexion = System.Configuration.ConfigurationManager.ConnectionStrings["APIsConnectionString"].ConnectionString;
+            strConexionLogDB = System.Configuration.ConfigurationManager.ConnectionStrings["LogDBConnectionString"].ConnectionString;
             instance = null;
         }
 
@@ -98,18 +100,58 @@ namespace CommonsWeb.DAL
                 }
             }
         }
-   
 
-    /// <summary>
-    /// Ejecuta el script SQL que recibe como parametro. 
-    /// Retorna un único valor de tipo string
-    /// La lista "IList<SqlParameter>" es usada como parametros de entra de la consulta.
-    /// </summary>
-    /// <param name="sentenceSql"></param>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
-    /// <exception cref="DAL.Helper.DALException"/>
-    public string ExecuteScalar(string sentenceSql)
+        /// <summary>
+        /// Ejecuta el script SQL que recibe como parametro y 
+        /// retorna un DataSet con los valores de la consulta.
+        /// </summary>
+        /// <param name="sentenceSql"></param>
+        /// <returns>DataSet</returns>
+        /// <exception cref="DAL.Helper.DALException"/>
+        public int ExecuteLogDB(string sentenceSql)
+        {
+            SqlCommand command = null;
+            try
+            {
+                int result = 0;
+
+                using (SqlConnection connection = new SqlConnection(strConexionLogDB))
+                {
+                    command = PrepareCommand(sentenceSql, connection);
+
+                    if (connection.State == ConnectionState.Closed)
+                    {
+                        connection.Open();
+                    }
+                    result = command.ExecuteNonQuery();
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Debug, "ERROR EN CAPA DAL:ExecuteCRUDLogDB", ex.Message);
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (command != null)
+                {
+                    command.Dispose();
+                    command = null;
+                }
+            }
+        }
+        /// <summary>
+        /// Ejecuta el script SQL que recibe como parametro. 
+        /// Retorna un único valor de tipo string
+        /// La lista "IList<SqlParameter>" es usada como parametros de entra de la consulta.
+        /// </summary>
+        /// <param name="sentenceSql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        /// <exception cref="DAL.Helper.DALException"/>
+        public string ExecuteScalar(string sentenceSql)
         {
             SqlCommand command = null;
             try

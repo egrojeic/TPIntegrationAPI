@@ -133,12 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Bussines\AirbillBusiness.cs" />
     <Compile Include="Bussines\Ordenes\OrdersBusiness.cs" />
+    <Compile Include="Controllers\AirbilllsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Airbills.cs" />
     <Compile Include="Models\AirbillDetails.cs" />
     <Compile Include="Models\AirbillRequest.cs" />
     <Compile Include="Models\LoginRequest.cs" />

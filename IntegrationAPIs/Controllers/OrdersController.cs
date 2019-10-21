@@ -1,5 +1,6 @@
 ﻿using IntegrationAPIs.Bussines.Ordenes;
 using IntegrationAPIs.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(OrderRequest), tmpFarm + "OrderRequest");
+
                     if (ModelState.IsValid)
                     {
                         OrdersBusiness OrderBnss = new OrdersBusiness();
@@ -75,6 +78,8 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(OrdersConfirm), tmpFarm + "OrdersConfirm");
+
                     if (ModelState.IsValid)
                     {
                         OrdersBusiness OrderBnss = new OrdersBusiness();

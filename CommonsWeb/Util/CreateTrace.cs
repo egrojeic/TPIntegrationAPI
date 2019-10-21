@@ -11,14 +11,8 @@ namespace Common
     /// </summary>
     public class CreateTrace
     {
-        const string FormatoFecha = "yyyy-MM-dd HH:mm:ss.FFF";
+        const string FormatoFecha = "yyyy-MM-dd";
         const string FormatoHora = "HH:mm:ss.FFF";
-        private string fileName;
-        private string DatosInvocacion;
-        string ruta;
-        string Usuario;
-        string DireccionIP;
-        string DominioIP;
         public static string Bloqueo;
 
         public enum LogLevel
@@ -40,8 +34,44 @@ namespace Common
             SqlServerHelper SQLConection = new SqlServerHelper();
             string strSQLog = "";
 
-            strSQLog = "INSERT INTO LogEventosAPI SELECT Nivel = '" + loglevel + "', Fecha = '" + DateTime.Now.ToString(FormatoFecha) + "', Hora = '" + DateTime.Now.ToString(FormatoHora) + "', Titulo = '" + logTitle + "', Mensaje = '" + logText + "'";
-            SQLConection.ExecuteCRUD(strSQLog);
+            strSQLog = "INSERT INTO LogEventosAPI SELECT Nivel = '" + loglevel + "', Fecha = '" + DateTime.Now.ToString(FormatoFecha) + "', Hora = '" + DateTime.Now.ToString(FormatoHora) + "', Titulo = '" + logTitle + "', Mensaje = '" + logText.Replace("'", "\"") + "'";
+            SQLConection.ExecuteLogDB(strSQLog);
+        }
+
+        public static void WriteLogJson(string logText, string logName)
+        {
+
+            CreateTrace Log = new CreateTrace();
+            Bloqueo = "1";
+            escribir(logText, logName + " "+ DateTime.Now.ToString(FormatoFecha) + " [" + DateTime.Now.ToString(FormatoHora) + "]");
+
+        }
+
+
+        private static void escribir(string mensaje, string fileName)
+        {
+            string RutaArchivo = "C:/LogIntegrationAPI/";
+            string fullPathName = @"" + RutaArchivo + fileName.Replace("-","_").Replace(":",".");
+
+            if (!System.IO.Directory.Exists(@"" + RutaArchivo))
+                System.IO.Directory.CreateDirectory(@"" + RutaArchivo);
+
+            try
+            {
+                lock (Bloqueo)
+                {
+                    using (StreamWriter w = File.AppendText(fullPathName))
+                    {
+                        w.WriteLine(mensaje);
+                    }
+                    //GC.Collect();
+                    //GC.WaitForPendingFinalizers();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN UTILS CrateJsonFile ", ex.Message);
+            }
         }
 
     }

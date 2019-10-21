@@ -9,9 +9,13 @@ namespace IntegrationAPIs.Models
     public class AirbillDetails
     {
         [Required]
-        public string OrderCode { get; set; }
+        public int OrderCode { get; set; }
+        [Required]
+        public int CustomerCode { get; set; }
         [Required]
         public string Customer { get; set; }
+        [Required]
+        public string CodeBoxProduct { get; set; }
         [Required]
         public string BoxedProduct { get; set; }
         [Required]

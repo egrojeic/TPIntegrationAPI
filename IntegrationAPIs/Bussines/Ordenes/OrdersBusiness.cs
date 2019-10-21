@@ -176,13 +176,13 @@ namespace IntegrationAPIs.Bussines.Ordenes
                     ResponseOrders.Orders = LstOrders;
                     ResponseOrders.Response.StatusCode = "200";
                     ResponseOrders.Response.Message = "Ordenes de Produccion Listadas Correctamente";
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", "Ordenes de Produccion Listadas Correctamente - " + strSQL);
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", "Ordenes de Produccion Listadas Correctamente - " + strSQL);
                 }
                 else
                 {
                     ResponseOrders.Response.StatusCode = "200";
                     ResponseOrders.Response.Message = "No Existen Ordenes de Produccion";
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", "No Existen Ordenes de Produccion - " + strSQL);
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", "No Existen Ordenes de Produccion - " + strSQL);
                 }
             }
             catch (Exception ex)
@@ -212,13 +212,13 @@ namespace IntegrationAPIs.Bussines.Ordenes
                     strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + orderElement;
                     tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
 
-                    if (tmpRsta == 1)
+                    if (tmpRsta == 0)
                     {
-                        strError = strError + orderElement + " - ";
+                        strError = strError + orderElement + " , ";
                     }
                     else
                     {
-                        strConfirmadas = strConfirmadas + orderElement + " - ";
+                        strConfirmadas = strConfirmadas + orderElement + " , ";
                     }
                 }
 
