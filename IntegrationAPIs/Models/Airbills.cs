@@ -19,7 +19,6 @@ namespace IntegrationAPIs.Models
         public string FarmInvoice { get; set; }
         public string HAWB { get; set; }
         public string ChargeAgency { get; set; }
-        public string Status { get; set; }
         [Required]
         public List<AirbillDetails> Details { get; set; }
     }

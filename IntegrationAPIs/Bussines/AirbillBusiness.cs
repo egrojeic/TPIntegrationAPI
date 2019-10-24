@@ -10,6 +10,9 @@ namespace IntegrationAPIs.Bussines
     public class AirbillBusiness
     {
         SqlServerHelper SQLConection = new SqlServerHelper();
+        string strError = "";
+        string strConfirmadas = "";
+        string tmpMsg = "";
 
         public MsgResponse CargarAirbills(string prmFarm, AirbillRequest prmAirbillRequest)
         {
@@ -52,25 +55,51 @@ namespace IntegrationAPIs.Bussines
                     tmpHAWB = prmAirbillRequest.Airbills[i].HAWB;
                     tmpChargeAgency = prmAirbillRequest.Airbills[i].ChargeAgency == null ? "" : prmAirbillRequest.Airbills[i].ChargeAgency;
 
-                    strSQL = "EXEC CrearAirbillFromAPI '" + tmpAWB + "' , '" + tmpDate + "' , '" + tmpAirline + "' , '" + tmpFarmInvoice + "' , '" + tmpHAWB + "' , '" + tmpChargeAgency + "'";
+                    strSQL = "EXEC CrearAirbillFromAPI '" + prmFarm + "' , '" + tmpAWB + "' , '" + tmpDate + "' , '" + tmpAirline + "' , '" + tmpFarmInvoice + "' , '" + tmpHAWB + "' , '" + tmpChargeAgency + "'";
                     tmpIDAirbill = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
 
-                    for (int j = 0; j < prmAirbillRequest.Airbills[i].Details.Count; j++)
+                    if (tmpIDAirbill != 0)
                     {
-                        tmpOrderCode = prmAirbillRequest.Airbills[i].Details[j].OrderCode;
-                        tmpCustomerCode = prmAirbillRequest.Airbills[i].Details[j].CustomerCode;
-                        tmpCustomer = prmAirbillRequest.Airbills[i].Details[j].Customer;
-                        tmpCodeBoxProduct = prmAirbillRequest.Airbills[i].Details[j].CodeBoxProduct;
-                        tmpBoxedProduct = prmAirbillRequest.Airbills[i].Details[j].BoxedProduct;
-                        tmpBox = prmAirbillRequest.Airbills[i].Details[j].Box;
-                        tmpPack = prmAirbillRequest.Airbills[i].Details[j].Pack;
-                        tmpQty = prmAirbillRequest.Airbills[i].Details[j].Qty;
-                        tmpCost = prmAirbillRequest.Airbills[i].Details[j].Cost;
+                        strConfirmadas = strConfirmadas + tmpAWB + " , ";
 
+                        for (int j = 0; j < prmAirbillRequest.Airbills[i].Details.Count; j++)
+                        {
+                            tmpOrderCode = prmAirbillRequest.Airbills[i].Details[j].OrderCode;
+                            tmpCustomerCode = prmAirbillRequest.Airbills[i].Details[j].CustomerCode;
+                            tmpCustomer = prmAirbillRequest.Airbills[i].Details[j].Customer;
+                            tmpCodeBoxProduct = prmAirbillRequest.Airbills[i].Details[j].CodeBoxProduct;
+                            tmpBoxedProduct = prmAirbillRequest.Airbills[i].Details[j].BoxedProduct;
+                            tmpBox = prmAirbillRequest.Airbills[i].Details[j].Box;
+                            tmpPack = prmAirbillRequest.Airbills[i].Details[j].Pack;
+                            tmpQty = prmAirbillRequest.Airbills[i].Details[j].Qty;
+                            tmpCost = prmAirbillRequest.Airbills[i].Details[j].Cost;
 
+                            strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBox + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ")";
+                            SQLConection.ExecuteCRUD(strSQL);
+                        }
+
+                        strSQL = "EXEC InterpretaDetallesAirbillAPI " + tmpIDAirbill;
+                        SQLConection.ExecuteScalar(strSQL);
+                    }
+                    else
+                    {
+                        strError = strError + tmpAWB + " , ";
                     }
                 }
 
+                msgResponse.StatusCode = "200";
+                if (strError.Length > 0)
+                {
+                    tmpMsg = "Airbills con Errores " + strError;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UploadAirbill", "Airbills con Errores - " + strError);
+                }
+                if (strConfirmadas.Length > 0)
+                {
+                    tmpMsg = tmpMsg + " Airbills Creadas " + strConfirmadas;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UploadAirbill", "Airbills Creadas - " + strConfirmadas);
+                }
+
+                msgResponse.Message = tmpMsg;
             }
             catch (Exception ex)
             {
@@ -92,11 +121,10 @@ namespace IntegrationAPIs.Bussines
         {
             string strSQL = "";
             MsgResponse msgResponse = new MsgResponse();
-            string strError = "";
-            string strConfirmadas = "";
             int tmpRsta = 0;
             string tmpAirbill;
             string tmpStatus;
+            
             try
             {
                 for (int i = 0; i < prmairbillStatusRequest.Airbills.Count; i++)
@@ -120,18 +148,17 @@ namespace IntegrationAPIs.Bussines
                 msgResponse.StatusCode = "200";
                 if (strError.Length > 0)
                 {
-                    msgResponse.Message = "Airbills con Errores " + strError;
+                    tmpMsg = "Airbills con Errores " + strError;
                     Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UpdateStatusAirbill", "Airbills con Errores - " + strError);
                 }
-                else
-                {
-                    msgResponse.Message = "Airbills confirmadas " + strConfirmadas;
-                }
-
                 if (strConfirmadas.Length > 0)
                 {
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UpdateStatusAirbill", "Airbills con Confirmadas - " + strConfirmadas);
+                    tmpMsg = tmpMsg + " Airbills confirmadas " + strConfirmadas;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UpdateStatusAirbill", "Airbills Confirmadas - " + strConfirmadas);
                 }
+
+                msgResponse.Message = tmpMsg;
+
             }
             catch (Exception ex)
             {

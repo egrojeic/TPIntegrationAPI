@@ -85,7 +85,7 @@ namespace IntegrationAPIs.Controllers
                     else
                     {
                         Message.StatusCode = "500";
-                        Message.Message = "Error en Request Structure Not Valid";
+                        Message.Message = "Error en Request Format Structure Not Valid";
                         Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Airbills/Status " + tmpFarm, "Error en Request: " + ModelState);
                     }
                 }
