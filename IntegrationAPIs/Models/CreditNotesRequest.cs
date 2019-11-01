@@ -11,4 +11,9 @@ namespace IntegrationAPIs.Models
         public DateTime FinalDate { get; set; }
         public int Code { get; set; }
     }
+
+    public class CreditNotesStatusRequest
+    {
+        public List<CreditNotesStatus> Credits { get; set; }
+    }
 }

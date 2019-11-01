@@ -62,5 +62,52 @@ namespace IntegrationAPIs.Controllers
 
             return CreditNResponse;
         }
+
+        [HttpPost]
+        [Route("Status")]
+        public MsgResponse ActualizaNotasCredito(CreditNotesStatusRequest CreditNStatusRequest)
+        {
+            string tmpFarm = "";
+
+            MsgResponse Message = new MsgResponse();
+
+            try
+            {
+                tmpFarm = HttpContext.Current.User.Identity.Name.ToString();
+
+                if (tmpFarm != "")
+                {
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(CreditNStatusRequest), tmpFarm + "UpdateStatusCreditN");
+
+                    if (ModelState.IsValid)
+                    {
+                        CreditNotesBusiness CreditNBnss = new CreditNotesBusiness();
+                        Message = CreditNBnss.ActualizaEstadoNotasCredito(tmpFarm, CreditNStatusRequest);
+                    }
+                    else
+                    {
+                        Message.StatusCode = "500";
+                        Message.Message = "Error en Request Format Structure Not Valid";
+                        Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Credits/Status " + tmpFarm, "Error en Request: " + ModelState);
+                    }
+                }
+                else
+                {
+                    Message.StatusCode = "401";
+                    Message.Message = "Error de Autenticacion";
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Credits/Status " + tmpFarm, "Error de Autenticacion");
+                }
+            }
+            catch (Exception ex)
+            {
+                Message.Message = "Error:" + ex.Message;
+                Message.StatusCode = "500";
+                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Credits/Status " + tmpFarm, ex.Message);
+            }
+
+
+            return Message;
+
+        }
     }
 }

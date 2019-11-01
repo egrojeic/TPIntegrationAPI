@@ -14,6 +14,9 @@ namespace IntegrationAPIs.Bussines
         string fechaInicial = "1900/01/01";
         string fechaFinal = "1900/01/01";
         int codigo = 0;
+        string strError = "";
+        string strConfirmadas = "";
+        string tmpMsg = "";
 
         public CreditNotesResponse GetNotasCredito(string prmFarm, CreditNotesRequest prmcreditNRequest)
         {
@@ -85,13 +88,13 @@ namespace IntegrationAPIs.Bussines
                     ResponseCredit.CreditNotes = LstCreditNotes;
                     ResponseCredit.Response.StatusCode = "200";
                     ResponseCredit.Response.Message = "Notas Credito Listadas Correctamente";
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO OrdersBusiness:GetCredits", "Notas Credito Listadas Correctamente - " + strSQL);
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO CreditNotesBusiness:GetCredits", "Notas Credito Listadas Correctamente - " + strSQL);
                 }
                 else
                 {
                     ResponseCredit.Response.StatusCode = "200";
                     ResponseCredit.Response.Message = "No Existen Notas Credito";
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO OrdersBusiness:GetCredits", "No Existen Notas Credito - " + strSQL);
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO CreditNotesBusiness:GetCredits", "No Existen Notas Credito - " + strSQL);
                 }
             }
             catch (Exception ex)
@@ -99,11 +102,70 @@ namespace IntegrationAPIs.Bussines
                 Exception lex;
 
                 lex = ex.InnerException != null ? ex.InnerException : ex;
-                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN CAPA DE NEGOCIO OrdersBusiness:GetCredits", lex.Message);
+                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN CAPA DE NEGOCIO CreditNotesBusiness:GetCredits", lex.Message);
                 throw new Exception(lex.Message, lex);
             }
 
             return ResponseCredit;
+        }
+
+        public MsgResponse ActualizaEstadoNotasCredito(string prmFarm, CreditNotesStatusRequest prmCreditNStatusRequest)
+        {
+            string strSQL = "";
+            MsgResponse msgResponse = new MsgResponse();
+            int tmpRsta = 0;
+            int tmpCodigo;
+            string tmpStatus;
+
+            try
+            {
+                for (int i = 0; i < prmCreditNStatusRequest.Credits.Count; i++)
+                {
+                    tmpCodigo = prmCreditNStatusRequest.Credits[i].Code;
+                    tmpStatus = prmCreditNStatusRequest.Credits[i].Status;
+
+                    strSQL = "EXEC ActualizaStatusCreditNoteAPI '" + tmpCodigo + "', '" + tmpStatus + "'";
+                    tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
+
+                    if (tmpRsta == 0)
+                    {
+                        strError = strError + tmpCodigo + " , ";
+                    }
+                    else
+                    {
+                        strConfirmadas = strConfirmadas + tmpCodigo + " , ";
+                    }
+                }
+
+                msgResponse.StatusCode = "200";
+                if (strError.Length > 0)
+                {
+                    tmpMsg = "Notas Credito con Errores " + strError;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO CreditNotesBusiness:UpdateStatusCredits", "Credits con Errores - " + strError);
+                }
+                if (strConfirmadas.Length > 0)
+                {
+                    tmpMsg = tmpMsg + " Notas Credito Actualizadas " + strConfirmadas;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO CreditNotesBusiness:UpdateStatusCredits", "Credits Actualizadas - " + strConfirmadas);
+                }
+
+                msgResponse.Message = tmpMsg;
+
+            }
+            catch (Exception ex)
+            {
+                Exception lex;
+
+                lex = ex.InnerException != null ? ex.InnerException : ex;
+
+                msgResponse.StatusCode = "500";
+                msgResponse.Message = "UpdateStatusCredits" + lex.Message.ToString();
+
+                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN CAPA DE NEGOCIO CreditNotesBusiness:UpdateStatusCredits", lex.Message);
+                throw new Exception(lex.Message, lex);
+            }
+
+            return msgResponse;
         }
 
         private void ObtenerDatos(CreditNotesRequest prmOrderRequest)
