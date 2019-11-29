@@ -82,14 +82,14 @@ namespace IntegrationAPIs.Controllers
 
                     if (ModelState.IsValid)
                     {
-                        OrdersBusiness OrderBnss = new OrdersBusiness();
+                        OrdersBusiness OrderBnss = new OrdersBusiness(); 
                         Message = OrderBnss.ConfirmOrders(tmpFarm, OrdersConfirm);
                     }
                     else
                     {
                         Message.StatusCode = "500";
                         Message.Message = "Error en Request Structure Not Valid";
-                        Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Orders/Confirmation " + tmpFarm, "Error en Request: " + ModelState);
+                        Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Orders/Confirmation " + tmpFarm, "Error en Request");
                     }
                 }
                 else

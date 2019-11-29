@@ -48,7 +48,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         Materiales = LstMateriales.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaMaterial"]));
                         Tallos = LstTallos.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaTallos"]));
                         Ramos = LstRamos.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaRamo"]));
-                        OrdenesDetalles = LstDetalles.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDDetalles"]));
+                        OrdenesDetalles = LstDetalles.Find(x => x.RegNumber == Convert.ToInt32(dataRowOrdenes["IDDetalles"]));
                         Ordenes = LstOrders.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["ID"]));
 
                         if (Materiales == null)
@@ -114,11 +114,15 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         if (OrdenesDetalles == null)
                         {
                             OrdenesDetalles = new OrderDetails();
-                            OrdenesDetalles.ID = Convert.ToInt32(dataRowOrdenes["IDDetalles"]);
+                            OrdenesDetalles.RegNumber = Convert.ToInt32(dataRowOrdenes["IDDetalles"]);
+                            OrdenesDetalles.SeasonCode = Convert.ToInt32(dataRowOrdenes["IDTemporadasDetallesPO"]);
+                            OrdenesDetalles.Season = Convert.ToString(dataRowOrdenes["IDTemporadasDetallesPO_Nombre"]);
+                            OrdenesDetalles.ModelCode = Convert.ToInt32(dataRowOrdenes["IDFloresRecetaModelos"]);
                             OrdenesDetalles.CodeBoxProduct = Convert.ToString(dataRowOrdenes["CodProdComercial"]);
                             OrdenesDetalles.BoxProduct = Convert.ToString(dataRowOrdenes["ProdComercial"]);
                             OrdenesDetalles.Pack = Convert.ToInt32(dataRowOrdenes["Pack"]);
                             OrdenesDetalles.Qty = Convert.ToInt32(dataRowOrdenes["Qty"]);
+                            OrdenesDetalles.QtyConfirmed = Convert.ToInt32(dataRowOrdenes["QtyConfirmed"]); 
                             OrdenesDetalles.Stems = Convert.ToInt32(dataRowOrdenes["Stems"]);
                             OrdenesDetalles.Box = Convert.ToString(dataRowOrdenes["IDBox_Nombre"]);
                             OrdenesDetalles.UnitCost = Convert.ToDecimal(dataRowOrdenes["UnitCost"]);
@@ -126,6 +130,9 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             OrdenesDetalles.PullDateWithFormat = Convert.ToString(dataRowOrdenes["PullDateWithFormat"]);
                             OrdenesDetalles.UPC = Convert.ToString(dataRowOrdenes["UPC"]);
                             OrdenesDetalles.UPCRetailPrice = Convert.ToDecimal(dataRowOrdenes["UPCRetailPrice"]);
+                            OrdenesDetalles.TimeStampMaster = Convert.ToDateTime(dataRowOrdenes["TimeStampMaster"]).ToString("MM-dd-yyyy HH:mm:ss");
+                            OrdenesDetalles.TimeStampRecipe = Convert.ToDateTime(dataRowOrdenes["TimeStampRecipe"]).ToString("MM-dd-yyyy HH:mm:ss");
+                            OrdenesDetalles.ReasonChange = Convert.ToString(dataRowOrdenes["MotivoCambio"]);
                             OrdenesDetalles.Bunches = new List<OrderBunchDetails>();
 
                             if (Ramos != null)
@@ -206,36 +213,36 @@ namespace IntegrationAPIs.Bussines.Ordenes
             int tmpRsta = 0;
             try
             {
-                for (int i = 0; i < prmOrderRequest.OrderCode.Length; i++)
-                {
-                    int orderElement = prmOrderRequest.OrderCode[i];
-                    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + orderElement;
-                    tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
+                //for (int i = 0; i < prmOrderRequest.OrderCode.Length; i++)
+                //{
+                //    int orderElement = prmOrderRequest.OrderCode[i];
+                //    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + orderElement;
+                //    tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
 
-                    if (tmpRsta == 0)
-                    {
-                        strError = strError + orderElement + " , ";
-                    }
-                    else
-                    {
-                        strConfirmadas = strConfirmadas + orderElement + " , ";
-                    }
-                }
+                //    if (tmpRsta == 0)
+                //    {
+                //        strError = strError + orderElement + " , ";
+                //    }
+                //    else
+                //    {
+                //        strConfirmadas = strConfirmadas + orderElement + " , ";
+                //    }
+                //}
 
                 msgResponse.StatusCode = "200";
                 if (strError.Length > 0)
                 {
-                    msgResponse.Message = "Ordenes con Errores " + strError;
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "Ordenes de Produccion Errores - " + strError);
+                    msgResponse.Message = "RegNumber con Errores " + strError;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "IDOrdenesCompraFincasDetalles Errores - " + strError);
                 }
                 else
                 {
-                    msgResponse.Message = "Ordenes confirmadas " + strConfirmadas;
+                    msgResponse.Message = "RegNumber Confirmados " + strConfirmadas;
                 }
 
                 if (strConfirmadas.Length > 0)
                 {
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "Ordenes de Produccion Confirmadas - " + strConfirmadas);
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "IDOrdenesCompraFincasDetalles Confirmadas - " + strConfirmadas);
                 }
             }
             catch (Exception ex)

@@ -17,8 +17,7 @@ namespace IntegrationAPIs.Models
 
     public class OrdersConfirmRequest
     {
-        [Required]
-        public int[] OrderCode { get; set; }
+        public List<OrdersConfirm> Confirmations { get; set; }
     }
 
 }
