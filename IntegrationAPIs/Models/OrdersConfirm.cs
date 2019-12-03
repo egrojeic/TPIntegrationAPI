@@ -17,6 +17,7 @@ namespace IntegrationAPIs.Models
         public string BoxProduct { get; set; }
         [Required]
         public int QtyConfirm { get; set; }
+        public string CancelReason { get; set; }
         public decimal UnitCostConfirm { get; set; }
     }
 }

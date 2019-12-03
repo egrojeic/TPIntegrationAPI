@@ -19,6 +19,8 @@ namespace IntegrationAPIs.Models
         [Required]
         public string BoxedProduct { get; set; }
         [Required]
+        public int BoxCode { get; set; }
+        [Required]
         public string Box { get; set; }
         [Required]
         public int Pack { get; set; }

@@ -29,6 +29,9 @@ namespace IntegrationAPIs.Models
         public string TimeStampMaster { get; set; }
         public string TimeStampRecipe { get; set; }
         public string ReasonChange { get; set; }
+        public string Wet { get; set; }
+        public string Maritime { get; set; }
         public List<OrderBunchDetails> Bunches { get; set; }
+        public List<OrderMaterialDetails> Materials { get; set; }
     }
 }

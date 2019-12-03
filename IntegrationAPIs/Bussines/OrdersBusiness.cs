@@ -28,6 +28,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                 DataSet dsOrdenes;
                 List<Orders> LstOrders = new List<Orders>();
                 List<OrderDetails> LstDetalles = new List<OrderDetails>();
+                List<OrderMaterialDetails> LstDetallesMateriales = new List<OrderMaterialDetails>();
                 List<OrderBunchDetails> LstRamos = new List<OrderBunchDetails>();
                 List<OrderMaterialDetails> LstMateriales = new List<OrderMaterialDetails>();
                 List<OrderFlowerDetails> LstTallos = new List<OrderFlowerDetails>();
@@ -41,6 +42,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                     {
                         Orders Ordenes;
                         OrderDetails OrdenesDetalles;
+                        OrderMaterialDetails DetallesMateriales;
                         OrderBunchDetails Ramos;
                         OrderFlowerDetails Tallos;
                         OrderMaterialDetails Materiales;
@@ -48,6 +50,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         Materiales = LstMateriales.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaMaterial"]));
                         Tallos = LstTallos.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaTallos"]));
                         Ramos = LstRamos.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaRamo"]));
+                        DetallesMateriales = LstDetallesMateriales.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["IDRecetaMaterialCaja"]));
                         OrdenesDetalles = LstDetalles.Find(x => x.RegNumber == Convert.ToInt32(dataRowOrdenes["IDDetalles"]));
                         Ordenes = LstOrders.Find(x => x.ID == Convert.ToInt32(dataRowOrdenes["ID"]));
 
@@ -85,6 +88,9 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             Ramos.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaRamo"]);
                             Ramos.Bunch = Convert.ToString(dataRowOrdenes["Ramo"]);
                             Ramos.Qty = Convert.ToInt32(dataRowOrdenes["QtyRamos"]);
+                            Ramos.AssemblyType = Convert.ToString(dataRowOrdenes["TiposEnsambleRamos"]);
+                            Ramos.Length = Convert.ToString(dataRowOrdenes["LongitudRamo"]);
+                            Ramos.Stems = Convert.ToInt32(dataRowOrdenes["TallosxRamo"]);
                             Ramos.Flowers = new List<OrderFlowerDetails>();
                             Ramos.Materials = new List<OrderMaterialDetails>();
 
@@ -111,6 +117,18 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             LstMateriales.Add(Materiales);
                         }
 
+                        if(DetallesMateriales == null)
+                        {
+                            if (Convert.ToInt32(dataRowOrdenes["IDRecetaMaterialCaja"]) != 0)
+                            {
+                                DetallesMateriales = new OrderMaterialDetails();
+                                DetallesMateriales.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaMaterialCaja"]);
+                                DetallesMateriales.Type = Convert.ToString(dataRowOrdenes["MaterialTypeCaja"]);
+                                DetallesMateriales.Material = Convert.ToString(dataRowOrdenes["MaterialCaja"]);
+                                DetallesMateriales.Qty = Convert.ToInt32(dataRowOrdenes["QtyMaterialCaja"]);
+                            }
+                        }
+
                         if (OrdenesDetalles == null)
                         {
                             OrdenesDetalles = new OrderDetails();
@@ -124,6 +142,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             OrdenesDetalles.Qty = Convert.ToInt32(dataRowOrdenes["Qty"]);
                             OrdenesDetalles.QtyConfirmed = Convert.ToInt32(dataRowOrdenes["QtyConfirmed"]); 
                             OrdenesDetalles.Stems = Convert.ToInt32(dataRowOrdenes["Stems"]);
+                            OrdenesDetalles.BoxCode = Convert.ToInt32(dataRowOrdenes["IDBox"]);
                             OrdenesDetalles.Box = Convert.ToString(dataRowOrdenes["IDBox_Nombre"]);
                             OrdenesDetalles.UnitCost = Convert.ToDecimal(dataRowOrdenes["UnitCost"]);
                             OrdenesDetalles.TotalCost = Convert.ToDecimal(dataRowOrdenes["TotalCost"]);
@@ -133,6 +152,8 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             OrdenesDetalles.TimeStampMaster = Convert.ToDateTime(dataRowOrdenes["TimeStampMaster"]).ToString("MM-dd-yyyy HH:mm:ss");
                             OrdenesDetalles.TimeStampRecipe = Convert.ToDateTime(dataRowOrdenes["TimeStampRecipe"]).ToString("MM-dd-yyyy HH:mm:ss");
                             OrdenesDetalles.ReasonChange = Convert.ToString(dataRowOrdenes["MotivoCambio"]);
+                            OrdenesDetalles.Wet = Convert.ToString(dataRowOrdenes["Wet"]);
+                            OrdenesDetalles.Maritime = Convert.ToString(dataRowOrdenes["Container"]);
                             OrdenesDetalles.Bunches = new List<OrderBunchDetails>();
 
                             if (Ramos != null)
@@ -140,12 +161,24 @@ namespace IntegrationAPIs.Bussines.Ordenes
                                 OrdenesDetalles.Bunches.Add(Ramos);
                                 LstRamos.Add(Ramos);
                             }
+                            if (DetallesMateriales != null)
+                            {
+                                OrdenesDetalles.Materials.Add(DetallesMateriales);
+                                LstDetallesMateriales.Add(DetallesMateriales);
+                            }
                         }
                         else
                         {
                             if (!OrdenesDetalles.Bunches.Contains(Ramos))
                                 OrdenesDetalles.Bunches.Add(Ramos);
                             LstRamos.Add(Ramos);
+
+                            if (OrdenesDetalles.Materials != null)
+                            {
+                                if (!OrdenesDetalles.Materials.Contains(DetallesMateriales))
+                                    OrdenesDetalles.Materials.Add(DetallesMateriales);
+                                LstDetallesMateriales.Add(DetallesMateriales);
+                            }
                         }
 
                         if (Ordenes == null)
@@ -211,25 +244,50 @@ namespace IntegrationAPIs.Bussines.Ordenes
             string strError = "";
             string strConfirmadas = "";
             int tmpRsta = 0;
+
+            int tmpRegNumber;
+            int tmpOrderCode;
+            int tmpCodeBoxProduct;
+            int tmpQtyConfirm;
+            string tmpCancelReason = "";
+            decimal tmpUnitCostConfirm = 0;
+
             try
             {
-                //for (int i = 0; i < prmOrderRequest.OrderCode.Length; i++)
-                //{
-                //    int orderElement = prmOrderRequest.OrderCode[i];
-                //    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + orderElement;
-                //    tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
+                for (int i = 0; i < prmOrderRequest.Confirmations.Count; i++)
+                {
+                    tmpRegNumber = prmOrderRequest.Confirmations[i].RegNumber;
+                    if (tmpRegNumber == 0)
+                    {
+                        throw new System.Exception("RegNumber Invalid");
+                    }
 
-                //    if (tmpRsta == 0)
-                //    {
-                //        strError = strError + orderElement + " , ";
-                //    }
-                //    else
-                //    {
-                //        strConfirmadas = strConfirmadas + orderElement + " , ";
-                //    }
-                //}
+                    tmpOrderCode = prmOrderRequest.Confirmations[i].OrderCode;
+                    tmpCodeBoxProduct = prmOrderRequest.Confirmations[i].CodeBoxProduct;
+                    tmpQtyConfirm = prmOrderRequest.Confirmations[i].QtyConfirm;
+                    tmpCancelReason = prmOrderRequest.Confirmations[i].CancelReason != null ? prmOrderRequest.Confirmations[i].CancelReason.Trim() : "";
 
-                msgResponse.StatusCode = "200";
+                    if (tmpQtyConfirm == 0 && tmpCancelReason == "")
+                    {
+                        throw new System.Exception("Cancel Reason Invalid");
+                    }
+                    
+                    tmpUnitCostConfirm = prmOrderRequest.Confirmations[i].UnitCostConfirm;
+
+                    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + tmpRegNumber + ", " + tmpQtyConfirm + ", " + tmpCodeBoxProduct + ", " + tmpOrderCode + ", '" + tmpCancelReason + "', " + tmpUnitCostConfirm;
+                    tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
+
+                    if (tmpRsta == 0)
+                    {
+                        strError = strError + tmpRegNumber + " , ";
+                    }
+                    else
+                    {
+                        strConfirmadas = strConfirmadas + tmpRegNumber + " , ";
+                    }
+                }
+
+                    msgResponse.StatusCode = "200";
                 if (strError.Length > 0)
                 {
                     msgResponse.Message = "RegNumber con Errores " + strError;

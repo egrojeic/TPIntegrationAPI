@@ -33,7 +33,7 @@ namespace IntegrationAPIs.Bussines
                 string tmpCustomer;
                 string tmpCodeBoxProduct;
                 string tmpBoxedProduct;
-                string tmpBox;
+                int tmpBoxCode;
                 int tmpPack;
                 int tmpQty;
                 decimal tmpCost;
@@ -69,12 +69,12 @@ namespace IntegrationAPIs.Bussines
                             tmpCustomer = prmAirbillRequest.Airbills[i].Details[j].Customer;
                             tmpCodeBoxProduct = prmAirbillRequest.Airbills[i].Details[j].CodeBoxProduct;
                             tmpBoxedProduct = prmAirbillRequest.Airbills[i].Details[j].BoxedProduct;
-                            tmpBox = prmAirbillRequest.Airbills[i].Details[j].Box;
+                            tmpBoxCode = prmAirbillRequest.Airbills[i].Details[j].BoxCode;
                             tmpPack = prmAirbillRequest.Airbills[i].Details[j].Pack;
                             tmpQty = prmAirbillRequest.Airbills[i].Details[j].Qty;
                             tmpCost = prmAirbillRequest.Airbills[i].Details[j].Cost;
 
-                            strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBox + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ")";
+                            strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBoxCode + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ")";
                             SQLConection.ExecuteCRUD(strSQL);
                         }
 
