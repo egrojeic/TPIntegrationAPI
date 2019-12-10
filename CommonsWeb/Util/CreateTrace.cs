@@ -38,20 +38,22 @@ namespace Common
             SQLConection.ExecuteLogDB(strSQLog);
         }
 
-        public static void WriteLogJson(string logText, string logName)
+        public static void WriteLogJson(string logText, string logName, int response)
         {
 
             CreateTrace Log = new CreateTrace();
             Bloqueo = "1";
-            escribir(logText, logName + " "+ DateTime.Now.ToString(FormatoFecha) + " [" + DateTime.Now.ToString(FormatoHora) + "]");
+            escribir(logText, logName + " "+ DateTime.Now.ToString(FormatoFecha) + " [" + DateTime.Now.ToString(FormatoHora) + "]", response);
 
         }
 
 
-        private static void escribir(string mensaje, string fileName)
+        private static void escribir(string mensaje, string fileName, int response)
         {
-            string RutaArchivo = "C:/LogIntegrationAPI/";
-            string fullPathName = @"" + RutaArchivo + fileName.Replace("-","_").Replace(":",".");
+            string RutaArchivo = "";
+            RutaArchivo = response == 1 ? "C:/LogIntegrationAPI/Response/" : "C:/LogIntegrationAPI/Request/";
+
+             string fullPathName = @"" + RutaArchivo + fileName.Replace("-","_").Replace(":",".");
 
             if (!System.IO.Directory.Exists(@"" + RutaArchivo))
                 System.IO.Directory.CreateDirectory(@"" + RutaArchivo);

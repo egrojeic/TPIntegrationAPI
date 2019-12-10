@@ -29,7 +29,7 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
-                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(AirbillRequest), tmpFarm + "UploadAirbill");
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(AirbillRequest), tmpFarm + "UploadAirbill",0);
 
                     if (ModelState.IsValid)
                     {
@@ -57,7 +57,7 @@ namespace IntegrationAPIs.Controllers
                 Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Airbills/Upload " + tmpFarm, ex.Message);
             }
 
-
+            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(Message), tmpFarm + "UploadAirbill", 1);
             return Message;
         }
 
@@ -75,7 +75,7 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
-                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(AirbillStatusRequest), tmpFarm + "UpdateStatusAirbill");
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(AirbillStatusRequest), tmpFarm + "UpdateStatusAirbill",0);
 
                     if (ModelState.IsValid)
                     {
@@ -103,7 +103,7 @@ namespace IntegrationAPIs.Controllers
                 Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Airbills/Status " + tmpFarm, ex.Message);
             }
 
-
+            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(Message), tmpFarm + "UpdateStatusAirbill", 1);
             return Message;
 
         }

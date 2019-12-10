@@ -169,7 +169,7 @@ namespace CommonsWeb.DAL
                     Object res = command.ExecuteScalar();
                     if (res != null)
                     {
-                        result = command.ExecuteScalar().ToString();
+                        result = res.ToString();
                     }
                     return result;
                 }

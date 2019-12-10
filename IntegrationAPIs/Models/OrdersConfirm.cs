@@ -13,7 +13,7 @@ namespace IntegrationAPIs.Models
         [Required]
         public int OrderCode { get; set; }
         [Required]
-        public int CodeBoxProduct { get; set; }
+        public string CodeBoxProduct { get; set; }
         public string BoxProduct { get; set; }
         [Required]
         public int QtyConfirm { get; set; }

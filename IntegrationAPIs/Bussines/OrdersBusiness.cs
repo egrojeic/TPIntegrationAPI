@@ -58,6 +58,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         {
                             Materiales = new OrderMaterialDetails();
                             Materiales.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaMaterial"]);
+                            Materiales.MaterialCode = Convert.ToInt32(dataRowOrdenes["IDMaterial"]);
                             Materiales.Type = Convert.ToString(dataRowOrdenes["MaterialType"]);
                             Materiales.Material = Convert.ToString(dataRowOrdenes["Material"]);
                             Materiales.Qty = Convert.ToInt32(dataRowOrdenes["QtyMaterial"]);
@@ -80,6 +81,13 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             Tallos.TinctureTones = Convert.ToString(dataRowOrdenes["TonosTintura"]);
                             Tallos.TinctureBase = Convert.ToString(dataRowOrdenes["FloresBaseTintura"]);
                             Tallos.GlitterType = Convert.ToString(dataRowOrdenes["GlitterType"]);
+                            Tallos.QualityCode = Convert.ToInt32(dataRowOrdenes["IDQuality"]);
+                            Tallos.TypeCode = Convert.ToInt32(dataRowOrdenes["IDFlowerType"]);
+                            Tallos.ColorCode = Convert.ToInt32(dataRowOrdenes["IDColores"]);
+                            Tallos.FlowerCode = Convert.ToInt32(dataRowOrdenes["IDTallo"]);
+                            Tallos.TreatmentCode = Convert.ToInt32(dataRowOrdenes["IDTratamientosFlor"]);
+                            Tallos.TinctureTonesCode = Convert.ToInt32(dataRowOrdenes["IDTonosTintura"]);
+
                         }
 
                         if (Ramos == null)
@@ -91,8 +99,10 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             Ramos.AssemblyType = Convert.ToString(dataRowOrdenes["TiposEnsambleRamos"]);
                             Ramos.Length = Convert.ToString(dataRowOrdenes["LongitudRamo"]);
                             Ramos.Stems = Convert.ToInt32(dataRowOrdenes["TallosxRamo"]);
+                            Ramos.UPCName = Convert.ToString(dataRowOrdenes["UPCName"]);
                             Ramos.Flowers = new List<OrderFlowerDetails>();
                             Ramos.Materials = new List<OrderMaterialDetails>();
+                            Ramos.AssemblyTypeCode = Convert.ToInt32(dataRowOrdenes["IDTiposEnsambleRamos"]);
 
                             if (Tallos != null)
                             {
@@ -123,6 +133,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             {
                                 DetallesMateriales = new OrderMaterialDetails();
                                 DetallesMateriales.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaMaterialCaja"]);
+                                DetallesMateriales.MaterialCode = Convert.ToInt32(dataRowOrdenes["IDMaterialCaja"]);
                                 DetallesMateriales.Type = Convert.ToString(dataRowOrdenes["MaterialTypeCaja"]);
                                 DetallesMateriales.Material = Convert.ToString(dataRowOrdenes["MaterialCaja"]);
                                 DetallesMateriales.Qty = Convert.ToInt32(dataRowOrdenes["QtyMaterialCaja"]);
@@ -138,6 +149,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             OrdenesDetalles.ModelCode = Convert.ToInt32(dataRowOrdenes["IDFloresRecetaModelos"]);
                             OrdenesDetalles.CodeBoxProduct = Convert.ToString(dataRowOrdenes["CodProdComercial"]);
                             OrdenesDetalles.BoxProduct = Convert.ToString(dataRowOrdenes["ProdComercial"]);
+                            OrdenesDetalles.BoxProductType = Convert.ToString(dataRowOrdenes["TipoProductoComercial"]);
                             OrdenesDetalles.Pack = Convert.ToInt32(dataRowOrdenes["Pack"]);
                             OrdenesDetalles.Qty = Convert.ToInt32(dataRowOrdenes["Qty"]);
                             OrdenesDetalles.QtyConfirmed = Convert.ToInt32(dataRowOrdenes["QtyConfirmed"]); 
@@ -155,6 +167,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             OrdenesDetalles.Wet = Convert.ToString(dataRowOrdenes["Wet"]);
                             OrdenesDetalles.Maritime = Convert.ToString(dataRowOrdenes["Container"]);
                             OrdenesDetalles.Bunches = new List<OrderBunchDetails>();
+                            OrdenesDetalles.Materials = new List<OrderMaterialDetails>();
 
                             if (Ramos != null)
                             {
@@ -163,7 +176,8 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             }
                             if (DetallesMateriales != null)
                             {
-                                OrdenesDetalles.Materials.Add(DetallesMateriales);
+                                if (!OrdenesDetalles.Materials.Contains(DetallesMateriales))
+                                    OrdenesDetalles.Materials.Add(DetallesMateriales);
                                 LstDetallesMateriales.Add(DetallesMateriales);
                             }
                         }
@@ -173,7 +187,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                                 OrdenesDetalles.Bunches.Add(Ramos);
                             LstRamos.Add(Ramos);
 
-                            if (OrdenesDetalles.Materials != null)
+                            if (DetallesMateriales != null)
                             {
                                 if (!OrdenesDetalles.Materials.Contains(DetallesMateriales))
                                     OrdenesDetalles.Materials.Add(DetallesMateriales);
@@ -187,6 +201,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             Ordenes.ID = Convert.ToInt32(dataRowOrdenes["ID"]);
                             Ordenes.PO = Convert.ToString(dataRowOrdenes["PO"]);
                             Ordenes.OrderCode = Convert.ToInt32(dataRowOrdenes["Codigo"]);
+                            Ordenes.Type = Convert.ToString(dataRowOrdenes["TipoDocumento"]);
                             Ordenes.FarmShipDate = Convert.ToDateTime(dataRowOrdenes["FarmShipDate"]).ToString("MM-dd-yyyy");
                             Ordenes.MiamiShipDate = Convert.ToDateTime(dataRowOrdenes["MiamiShipDate"]).ToString("MM-dd-yyyy");
                             Ordenes.DeliveryDate = Convert.ToDateTime(dataRowOrdenes["DeliveryDate"]).ToString("MM-dd-yyyy");
@@ -243,11 +258,14 @@ namespace IntegrationAPIs.Bussines.Ordenes
             string strSQL = "";
             string strError = "";
             string strConfirmadas = "";
+            string strAdvConfirmada = "";
+            string strMensaje = "";
+
             int tmpRsta = 0;
 
             int tmpRegNumber;
             int tmpOrderCode;
-            int tmpCodeBoxProduct;
+            string tmpCodeBoxProduct;
             int tmpQtyConfirm;
             string tmpCancelReason = "";
             decimal tmpUnitCostConfirm = 0;
@@ -271,37 +289,46 @@ namespace IntegrationAPIs.Bussines.Ordenes
                     {
                         throw new System.Exception("Cancel Reason Invalid");
                     }
-                    
+
                     tmpUnitCostConfirm = prmOrderRequest.Confirmations[i].UnitCostConfirm;
 
-                    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + tmpRegNumber + ", " + tmpQtyConfirm + ", " + tmpCodeBoxProduct + ", " + tmpOrderCode + ", '" + tmpCancelReason + "', " + tmpUnitCostConfirm;
+                    strSQL = "EXEC ConfirmaOrdenesAPI '" + prmFarm + "', " + tmpRegNumber + ", " + tmpQtyConfirm + ", '" + tmpCodeBoxProduct + "' , " + tmpOrderCode + ", '" + tmpCancelReason + "', " + tmpUnitCostConfirm.ToString().Replace(',','.');
                     tmpRsta = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
 
-                    if (tmpRsta == 0)
+                    switch (tmpRsta)
                     {
-                        strError = strError + tmpRegNumber + " , ";
-                    }
-                    else
-                    {
-                        strConfirmadas = strConfirmadas + tmpRegNumber + " , ";
+                        case 0:
+                            strError = strError + tmpRegNumber + " , ";
+                            break;
+                        case 1:
+                            strConfirmadas = strConfirmadas + tmpRegNumber + " , ";
+                            break;
+                        case 2:
+                            strAdvConfirmada = strAdvConfirmada + tmpRegNumber + " , ";
+                            break;
                     }
                 }
 
                     msgResponse.StatusCode = "200";
                 if (strError.Length > 0)
                 {
-                    msgResponse.Message = "RegNumber con Errores " + strError;
+                    strMensaje = "RegNumber con Errores " + strError;
                     Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "IDOrdenesCompraFincasDetalles Errores - " + strError);
-                }
-                else
-                {
-                    msgResponse.Message = "RegNumber Confirmados " + strConfirmadas;
                 }
 
                 if (strConfirmadas.Length > 0)
                 {
+                    strMensaje = strMensaje + " RegNumber Confirmados " + strConfirmadas;
                     Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "IDOrdenesCompraFincasDetalles Confirmadas - " + strConfirmadas);
                 }
+
+                if (strAdvConfirmada.Length > 0)
+                {
+                    strMensaje = strMensaje + " RegNumber Anteriormente Confirmados " + strAdvConfirmada;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO OrdersBusiness:ConfirmOrders", "IDOrdenesCompraFincasDetalles Anteriormente Confirmados - " + strAdvConfirmada);
+                }
+
+                msgResponse.Message = strMensaje;
             }
             catch (Exception ex)
             {

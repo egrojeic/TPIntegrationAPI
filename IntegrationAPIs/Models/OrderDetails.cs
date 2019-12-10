@@ -14,6 +14,7 @@ namespace IntegrationAPIs.Models
         public int ModelCode { get; set; }
         public string CodeBoxProduct { get; set; }
         public string BoxProduct { get; set; }
+        public string BoxProductType { get; set; }
         public int Pack { get; set; }
         public int Qty { get; set; }
         public int QtyConfirmed { get; set; }

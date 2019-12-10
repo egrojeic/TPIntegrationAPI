@@ -31,7 +31,7 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
-                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(CreditNRequest), tmpFarm + "GetCredits");
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(CreditNRequest), tmpFarm + "GetCredits",0);
 
                     if (ModelState.IsValid)
                     {
@@ -59,7 +59,7 @@ namespace IntegrationAPIs.Controllers
                 Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Credits/Get " + tmpFarm, ex.Message);
             }
 
-
+            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(CreditNResponse), tmpFarm + "GetCredits", 1);
             return CreditNResponse;
         }
 
@@ -77,7 +77,7 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
-                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(CreditNStatusRequest), tmpFarm + "UpdateStatusCreditN");
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(CreditNStatusRequest), tmpFarm + "UpdateStatusCreditN", 0);
 
                     if (ModelState.IsValid)
                     {
@@ -105,7 +105,7 @@ namespace IntegrationAPIs.Controllers
                 Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Credits/Status " + tmpFarm, ex.Message);
             }
 
-
+            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(Message), tmpFarm + "UpdateStatusCreditN", 1);
             return Message;
 
         }

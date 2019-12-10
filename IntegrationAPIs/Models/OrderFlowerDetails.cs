@@ -10,16 +10,22 @@ namespace IntegrationAPIs.Models
     {
         [JsonIgnore]
         public int ID { get; set; }
+        public int TypeCode { get; set; }
         public string Type { get; set; }
         public string Category { get; set; }
+        public int ColorCode { get; set; }
         public string Color { get; set; }
+        public int FlowerCode { get; set; }
         public string Flower { get; set; }
         public int Qty { get; set; }
         public string Grade { get; set; }
+        public int QualityCode { get; set; }
         public string Quality { get; set; }
+        public int TreatmentCode { get; set; }
         public string Treatment { get; set; }
         public string BloomCount { get; set; }
         public string TreatmentTechnique { get; set; }
+        public int TinctureTonesCode { get; set; }
         public string TinctureTones { get; set; }
         public string TinctureBase { get; set; }
         public string GlitterType { get; set; }

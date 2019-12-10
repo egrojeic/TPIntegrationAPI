@@ -32,7 +32,7 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
-                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(OrderRequest), tmpFarm + "OrderRequest");
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(OrderRequest), tmpFarm + "OrderRequest", 0);
 
                     if (ModelState.IsValid)
                     {
@@ -60,7 +60,7 @@ namespace IntegrationAPIs.Controllers
                 Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Orders/Get " + tmpFarm, ex.Message);
             }
 
-
+            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(ResponseOrders), tmpFarm + "ResponseOrders",1);
             return ResponseOrders;
         }
 
@@ -78,7 +78,7 @@ namespace IntegrationAPIs.Controllers
 
                 if (tmpFarm != "")
                 {
-                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(OrdersConfirm), tmpFarm + "OrdersConfirm");
+                    Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(OrdersConfirm), tmpFarm + "OrdersConfirm", 0);
 
                     if (ModelState.IsValid)
                     {
@@ -106,7 +106,7 @@ namespace IntegrationAPIs.Controllers
                 Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Orders/Confirmation " + tmpFarm, ex.Message);
             }
 
-
+            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(Message), tmpFarm + "OrdersConfirm", 1);
             return Message;
 
         }
