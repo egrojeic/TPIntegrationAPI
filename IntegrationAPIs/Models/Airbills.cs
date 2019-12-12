@@ -13,11 +13,14 @@ namespace IntegrationAPIs.Models
         [Required]
         public DateTime Date { get; set; }
         [Required]
+        public string AirlineCode { get; set; }
         public string Airline { get; set; }
         public string Farm { get; set; }
         [Required]
         public string FarmInvoice { get; set; }
         public string HAWB { get; set; }
+        [Required]
+        public string ChargeAgencyCode { get; set; }
         public string ChargeAgency { get; set; }
         [Required]
         public List<AirbillDetails> Details { get; set; }

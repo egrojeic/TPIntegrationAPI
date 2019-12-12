@@ -38,67 +38,82 @@ namespace IntegrationAPIs.Bussines
                 int tmpQty;
                 string tmpCost;
 
-                for (int i = 0; i < prmAirbillRequest.Airbills.Count; i++)
+                string strRsta = "";
+                strRsta = Validaciones(prmFarm, prmAirbillRequest);
+
+                if (strRsta.Length == 0)
                 {
-                    tmpAWB = prmAirbillRequest.Airbills[i].AWB;
-                    if (prmAirbillRequest.Airbills[i].Date != null && prmAirbillRequest.Airbills[i].Date != new DateTime())
+                    for (int i = 0; i < prmAirbillRequest.Airbills.Count; i++)
                     {
+                        tmpAWB = prmAirbillRequest.Airbills[i].AWB;
                         tmpDate = prmAirbillRequest.Airbills[i].Date.ToString("MM/dd/yyyy");
-                    }
-                    else
-                    {
-                        throw new System.Exception("Format Date Invalid");
-                    }
+                        tmpFarmInvoice = prmAirbillRequest.Airbills[i].FarmInvoice;
+                        tmpHAWB = prmAirbillRequest.Airbills[i].HAWB;
+                        tmpChargeAgency = prmAirbillRequest.Airbills[i].ChargeAgencyCode;
+                        tmpAirline = prmAirbillRequest.Airbills[i].AirlineCode;
 
-                    tmpAirline = prmAirbillRequest.Airbills[i].Airline;
-                    tmpFarmInvoice = prmAirbillRequest.Airbills[i].FarmInvoice;
-                    tmpHAWB = prmAirbillRequest.Airbills[i].HAWB;
-                    tmpChargeAgency = prmAirbillRequest.Airbills[i].ChargeAgency == null ? "" : prmAirbillRequest.Airbills[i].ChargeAgency;
+                        strSQL = "EXEC CrearAirbillFromAPI '" + prmFarm + "' , '" + tmpAWB + "' , '" + tmpDate + "' , '" + tmpAirline + "' , '" + tmpFarmInvoice + "' , '" + tmpHAWB + "' , '" + tmpChargeAgency + "'";
+                        tmpIDAirbill = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
 
-                    strSQL = "EXEC CrearAirbillFromAPI '" + prmFarm + "' , '" + tmpAWB + "' , '" + tmpDate + "' , '" + tmpAirline + "' , '" + tmpFarmInvoice + "' , '" + tmpHAWB + "' , '" + tmpChargeAgency + "'";
-                    tmpIDAirbill = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
-
-                    if (tmpIDAirbill != 0)
-                    {
-                        strConfirmadas = strConfirmadas + tmpAWB + " , ";
-
-                        for (int j = 0; j < prmAirbillRequest.Airbills[i].Details.Count; j++)
+                        if (tmpIDAirbill > 0)
                         {
-                            tmpOrderCode = prmAirbillRequest.Airbills[i].Details[j].OrderCode;
-                            tmpCustomerCode = prmAirbillRequest.Airbills[i].Details[j].CustomerCode;
-                            tmpCustomer = prmAirbillRequest.Airbills[i].Details[j].Customer;
-                            tmpCodeBoxProduct = prmAirbillRequest.Airbills[i].Details[j].CodeBoxProduct;
-                            tmpBoxedProduct = prmAirbillRequest.Airbills[i].Details[j].BoxedProduct;
-                            tmpBoxCode = prmAirbillRequest.Airbills[i].Details[j].BoxCode;
-                            tmpPack = prmAirbillRequest.Airbills[i].Details[j].Pack;
-                            tmpQty = prmAirbillRequest.Airbills[i].Details[j].Qty;
-                            tmpCost = prmAirbillRequest.Airbills[i].Details[j].Cost.ToString().Replace(',','.');
+                            strConfirmadas = strConfirmadas + tmpAWB + " , ";
 
-                            strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBoxCode + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ")";
-                            SQLConection.ExecuteCRUD(strSQL);
+                            for (int j = 0; j < prmAirbillRequest.Airbills[i].Details.Count; j++)
+                            {
+                                tmpOrderCode = prmAirbillRequest.Airbills[i].Details[j].OrderCode;
+                                tmpCustomerCode = prmAirbillRequest.Airbills[i].Details[j].CustomerCode;
+                                tmpCustomer = prmAirbillRequest.Airbills[i].Details[j].Customer;
+                                tmpCodeBoxProduct = prmAirbillRequest.Airbills[i].Details[j].CodeBoxProduct;
+                                tmpBoxedProduct = prmAirbillRequest.Airbills[i].Details[j].BoxedProduct;
+                                tmpBoxCode = prmAirbillRequest.Airbills[i].Details[j].BoxCode;
+                                tmpPack = prmAirbillRequest.Airbills[i].Details[j].Pack;
+                                tmpQty = prmAirbillRequest.Airbills[i].Details[j].Qty;
+                                tmpCost = prmAirbillRequest.Airbills[i].Details[j].Cost.ToString().Replace(',', '.');
+
+                                strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBoxCode + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ")";
+                                SQLConection.ExecuteCRUD(strSQL);
+                            }
+
+                            strSQL = "EXEC InterpretaDetallesAirbillAPI " + tmpIDAirbill;
+                            SQLConection.ExecuteScalar(strSQL);
                         }
+                        else
+                        {
+                            switch (tmpIDAirbill)
+                            {
+                                case 0:
+                                    strError = strError + tmpAWB + " Invalid Farm , ";
+                                    break;
+                                case -1:
+                                    strError = strError + tmpAWB + " Invalid Airline , ";
+                                    break;
+                                case -2:
+                                    strError = strError + tmpAWB + " Invalid Charge Agency , ";
+                                    break;
 
-                        strSQL = "EXEC InterpretaDetallesAirbillAPI " + tmpIDAirbill;
-                        SQLConection.ExecuteScalar(strSQL);
+                            }
+                        }
                     }
-                    else
+
+                    msgResponse.StatusCode = "200";
+                    if (strError.Length > 0)
                     {
-                        strError = strError + tmpAWB + " , ";
+                        tmpMsg = "Airbills con Errores: " + strError;
+                        Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UploadAirbill", "Airbills con Errores - " + strError);
+                    }
+                    if (strConfirmadas.Length > 0)
+                    {
+                        tmpMsg = tmpMsg + " Airbills Creadas Correctamente: " + strConfirmadas;
+                        Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UploadAirbill", "Airbills Creadas - " + strConfirmadas);
                     }
                 }
-
-                msgResponse.StatusCode = "200";
-                if (strError.Length > 0)
+                else
                 {
-                    tmpMsg = "Airbills con Errores " + strError;
+                    tmpMsg = "Airbills con Errores: " + strRsta;
                     Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UploadAirbill", "Airbills con Errores - " + strError);
                 }
-                if (strConfirmadas.Length > 0)
-                {
-                    tmpMsg = tmpMsg + " Airbills Creadas " + strConfirmadas;
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "CAPA DE NEGOCIO AirbillBusiness:UploadAirbill", "Airbills Creadas - " + strConfirmadas);
-                }
-
+                
                 msgResponse.Message = tmpMsg;
             }
             catch (Exception ex)
@@ -116,6 +131,69 @@ namespace IntegrationAPIs.Bussines
 
             return msgResponse;
         }
+
+        private string Validaciones(string prmFarm, AirbillRequest prmAirbillRequest)
+        {
+            string strSQL = "";
+            string strRsta = "";
+            string tmpAWB;
+            string tmpDate;
+            int tmpCountAirbill = 0;
+            int tmpOrderCode;
+            int tmpCountFarmOrder;
+
+            try
+            {
+                for (int i = 0; i < prmAirbillRequest.Airbills.Count; i++)
+                {
+                    tmpAWB = prmAirbillRequest.Airbills[i].AWB;
+                    if (prmAirbillRequest.Airbills[i].Date != null && prmAirbillRequest.Airbills[i].Date != new DateTime())
+                    {
+                        tmpDate = prmAirbillRequest.Airbills[i].Date.ToString("MM/dd/yyyy");
+                    }
+                    else
+                    {
+                        strRsta = strRsta + "AWB " + tmpAWB + " Format Date Invalid";
+                    }
+                    if (prmAirbillRequest.Airbills[i].Date != null && prmAirbillRequest.Airbills[i].Date != new DateTime() && prmAirbillRequest.Airbills[i].Date < DateTime.Now.Date)
+                    {
+                        strRsta = strRsta + " AWB " + tmpAWB + " Wrong Date, It can't be less than today";
+                    }
+
+                    strSQL = "EXEC VerificaExistenciaAirbill '" + prmFarm + "' , '" + tmpAWB + "'";
+                    tmpCountAirbill = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
+
+                    if (tmpCountAirbill != 0)
+                    {
+                        strRsta = strRsta + " AWB " + tmpAWB + " Already Exists";
+                    }
+
+                    for (int j = 0; j < prmAirbillRequest.Airbills[i].Details.Count; j++)
+                    {
+                        tmpOrderCode = prmAirbillRequest.Airbills[i].Details[j].OrderCode;
+                        strSQL = "EXEC VerificaOrdenFinca '" + prmFarm + "' , " + tmpOrderCode;
+                        tmpCountFarmOrder = Convert.ToInt32(SQLConection.ExecuteScalar(strSQL));
+
+                        if (tmpCountFarmOrder == 0)
+                        {
+                            strRsta = strRsta + " Farm Code " + tmpOrderCode + " NOT Confirmed";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Exception lex;
+                strRsta = "Error Validaciones";
+
+                lex = ex.InnerException != null ? ex.InnerException : ex;
+
+                Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN CAPA DE NEGOCIO AirbillBusiness:UploadAirbill.Validaciones", lex.Message);
+                throw new Exception(lex.Message, lex);
+            }
+
+            return strRsta;
+    }
 
         public MsgResponse ActualizaEstadoAirbill(string prmFarm, AirbillStatusRequest prmairbillStatusRequest)
         {
