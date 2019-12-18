@@ -37,6 +37,9 @@ namespace IntegrationAPIs.Bussines
                 int tmpPack;
                 int tmpQty;
                 string tmpCost;
+                int tmpInvoice;
+                int tmpCompanyCode;
+                int tmpTrackBoxCode;
 
                 string strRsta = "";
                 strRsta = Validaciones(prmFarm, prmAirbillRequest);
@@ -70,8 +73,11 @@ namespace IntegrationAPIs.Bussines
                                 tmpPack = prmAirbillRequest.Airbills[i].Details[j].Pack;
                                 tmpQty = prmAirbillRequest.Airbills[i].Details[j].Qty;
                                 tmpCost = prmAirbillRequest.Airbills[i].Details[j].Cost.ToString().Replace(',', '.');
+                                tmpInvoice = prmAirbillRequest.Airbills[i].Details[j].Invoice;
+                                tmpCompanyCode = prmAirbillRequest.Airbills[i].Details[j].CompanyCode;
+                                tmpTrackBoxCode = prmAirbillRequest.Airbills[i].Details[j].TrackBoxCode;
 
-                                strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBoxCode + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ")";
+                                strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBoxCode + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ", " + tmpInvoice + ", " + tmpCompanyCode + ", " + tmpTrackBoxCode + ")";
                                 SQLConection.ExecuteCRUD(strSQL);
                             }
 

@@ -26,6 +26,10 @@ namespace IntegrationAPIs.Models
         public int Pack { get; set; }
         [Required]
         public int Qty { get; set; }
+        public int CompanyCode { get; set; }
+        [Range(1,99999, ErrorMessage = "Length TrackBoxCode Invalid")]
+        public int TrackBoxCode { get; set; }
         public decimal Cost { get; set; }
+        public int Invoice { get; set; }
     }
 }

@@ -55,6 +55,13 @@ namespace IntegrationAPIs.Bussines
                             CreditosDetalles.Qty = Convert.ToInt32(dataRowCreditos["Cantidad"]);
                             CreditosDetalles.UnitPrice = Convert.ToDecimal(dataRowCreditos["PrecioUnit"]);
                             CreditosDetalles.AdditionalCreditValue = Convert.ToDecimal(dataRowCreditos["ValorAdicionalCredito"]);
+                            CreditosDetalles.Invoice = Convert.ToInt32(dataRowCreditos["NumFactura"]);
+                            CreditosDetalles.CompanyCode = Convert.ToInt32(dataRowCreditos["CompanyCode"]);
+                            CreditosDetalles.SeasonCode = Convert.ToInt32(dataRowCreditos["IDTemporadasDetallesPO"]);
+                            CreditosDetalles.CustomerCode = Convert.ToInt32(dataRowCreditos["IDClientes_Codigo"]);
+                            CreditosDetalles.CodeBoxProduct = Convert.ToString(dataRowCreditos["CodProdComercial"]);
+                            CreditosDetalles.ModelCode = Convert.ToInt32(dataRowCreditos["IDFloresRecetaModelos"]);
+                            CreditosDetalles.TrackBoxCode = Convert.ToInt32(dataRowCreditos["CodCaja"]);
                         }
                         
                         if (Creditos == null)
