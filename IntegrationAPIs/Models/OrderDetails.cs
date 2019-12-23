@@ -8,31 +8,32 @@ namespace IntegrationAPIs.Models
 {
     public class OrderDetails
     {
-        public int RegNumber { get; set; }
-        public int SeasonCode { get; set; }
-        public string Season { get; set; }
-        public int ModelCode { get; set; }
-        public string CodeBoxProduct { get; set; }
-        public string BoxProduct { get; set; }
-        public string BoxProductType { get; set; }
-        public int Pack { get; set; }
-        public int Qty { get; set; }
-        public int QtyConfirmed { get; set; }
-        public int Stems { get; set; }
-        public int BoxCode { get; set; }
-        public string Box { get; set; }
-        public decimal UnitPrice { get; set; }
-        public decimal UnitCost { get; set; }
-        public decimal TotalCost { get; set; }
-        public string PullDateWithFormat { get; set; }
-        public string UPC { get; set; }
-        public decimal UPCRetailPrice { get; set; }
-        public string TimeStampMaster { get; set; }
-        public string TimeStampRecipe { get; set; }
-        public string ReasonChange { get; set; }
-        public string Wet { get; set; }
-        public string Maritime { get; set; }
-        public List<OrderBunchDetails> Bunches { get; set; }
-        public List<OrderMaterialDetails> Materials { get; set; }
+        public int RegNumber;
+        public int SeasonCode;
+        public string Season;
+        public int ModelCode;
+        public string CodeBoxProduct;
+        public string BoxProduct;
+        public string BoxProductType;
+        public int Pack;
+        public int Qty;
+        public int QtyConfirmed;
+        public int Stems;
+        public int BoxCode;
+        public string Box;
+        public decimal UnitPrice;
+        public decimal UnitCost;
+        public decimal TotalCost;
+        public string PullDateWithFormat;
+        public string UPC;
+        public decimal UPCRetailPrice;
+        public string TimeStampMaster;
+        public string TimeStampRecipe;
+        public string ReasonChange;
+        public string Wet;
+        public string Maritime;
+        public int SemaphoreSubs;
+        public List<OrderBunchDetails> Bunches;
+        public List<OrderMaterialDetails> Materials;
     }
 }

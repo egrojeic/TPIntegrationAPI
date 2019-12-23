@@ -9,18 +9,18 @@ namespace IntegrationAPIs.Models
     public class Orders
     {
         [JsonIgnore]
-        public int ID { get; set; } 
-        public string PO { get; set; }
-        public int OrderCode { get; set; }
-        public string Type { get; set; }
-        public string FarmShipDate { get; set; }
-        public string MiamiShipDate { get; set; }
-        public string DeliveryDate { get; set; }
-        public string PullDate { get; set; }
-        public string Status { get; set; }
-        public int CustomerCode { get; set; }
-        public string Customer { get; set; }
-        public string Farm { get; set; }
-        public List<OrderDetails> Details { get; set; }
+        public int ID;
+        public string PO;
+        public int OrderCode;
+        public string Type;
+        public string FarmShipDate;
+        public string MiamiShipDate;
+        public string DeliveryDate;
+        public string PullDate;
+        public string Status;
+        public int CustomerCode;
+        public string Customer;
+        public string Farm;
+        public List<OrderDetails> Details;
     }
 }

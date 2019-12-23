@@ -9,15 +9,15 @@ namespace IntegrationAPIs.Models
     public class OrderBunchDetails
     {
         [JsonIgnore]
-        public int ID { get; set; }
-        public string Bunch { get; set; }
-        public int Qty { get; set; }
-        public int AssemblyTypeCode { get; set; }
-        public string AssemblyType { get; set; }
-        public string Length { get; set; }
-        public int Stems { get; set; }
-        public string UPCName { get; set; }
-        public List<OrderFlowerDetails> Flowers { get; set; }
-        public List<OrderMaterialDetails> Materials { get; set; }
+        public int ID;
+        public string Bunch;
+        public int Qty;
+        public int AssemblyTypeCode;
+        public string AssemblyType;
+        public string Length;
+        public int Stems;
+        public string UPCName;
+        public List<OrderFlowerDetails> Flowers;
+        public List<OrderMaterialDetails> Materials;
     }
 }

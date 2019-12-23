@@ -16,11 +16,12 @@ namespace IntegrationAPIs.Models
         public int SeasonCode { get; set; }
         public int ModelCode { get; set; }
         public string BoxProduct { get; set; }
+        public string Reason { get; set; }
         public int Pack { get; set; }
         public int Qty { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal AdditionalCreditValue { get; set; }
-        public int Invoice { get; set; }
+        public string Invoice { get; set; }
         public int CompanyCode { get; set; }
     }
 }

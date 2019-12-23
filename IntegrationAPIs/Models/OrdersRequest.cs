@@ -13,6 +13,7 @@ namespace IntegrationAPIs.Models
         [DataType(DataType.Date)]
         public DateTime FinalDate { get; set; }
         public int OrderCode { get; set; }
+        public string PendingOrders { get; set; }
     }
 
     public class OrdersConfirmRequest

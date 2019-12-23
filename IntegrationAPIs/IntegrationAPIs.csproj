@@ -132,6 +132,8 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Bussines\AirbillBusiness.cs" />
+    <Compile Include="Bussines\CancelationRBusiness.cs" />
+    <Compile Include="Controllers\CancelationRequestController.cs" />
     <Compile Include="Bussines\CreditNotesBusiness.cs" />
     <Compile Include="Bussines\OrdersBusiness.cs" />
     <Compile Include="Controllers\AirbilllsController.cs" />
@@ -144,6 +146,9 @@
     <Compile Include="Models\Airbills.cs" />
     <Compile Include="Models\AirbillDetails.cs" />
     <Compile Include="Models\AirbillRequest.cs" />
+    <Compile Include="Models\CancelationResponse.cs" />
+    <Compile Include="Models\Cancelations.cs" />
+    <Compile Include="Models\CancelationsConfirm.cs" />
     <Compile Include="Models\CreditNotes.cs" />
     <Compile Include="Models\CreditNotesDetails.cs" />
     <Compile Include="Models\CreditNotesRequest.cs" />

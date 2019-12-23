@@ -14,6 +14,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
         string fechaInicial = "1900/01/01";
         string fechaFinal = "1900/01/01";
         int codigoOrden = 0;
+        int pendingOrders = 0;
 
         public OrdersResponse GetOrders(string prmFarm, OrdersRequest prmOrderRequest)
         {
@@ -33,7 +34,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                 List<OrderMaterialDetails> LstMateriales = new List<OrderMaterialDetails>();
                 List<OrderFlowerDetails> LstTallos = new List<OrderFlowerDetails>();
 
-                strSQL = "EXEC ConsultaOrdenesAPI '" + prmFarm + "', '" + fechaInicial + "' , '" + fechaFinal + "', " + codigoOrden;
+                strSQL = "EXEC ConsultaOrdenesAPI '" + prmFarm + "', '" + fechaInicial + "' , '" + fechaFinal + "', " + codigoOrden + ", " + pendingOrders;
                 dsOrdenes = SQLConection.ExecuteProcedureToDataSet(strSQL);
 
                 if (dsOrdenes != null && dsOrdenes.Tables[0].Rows.Count > 0)
@@ -59,8 +60,8 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             Materiales = new OrderMaterialDetails();
                             Materiales.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaMaterial"]);
                             Materiales.MaterialCode = Convert.ToInt32(dataRowOrdenes["IDMaterial"]);
-                            Materiales.Type = Convert.ToString(dataRowOrdenes["MaterialType"]);
-                            Materiales.Material = Convert.ToString(dataRowOrdenes["Material"]);
+                            Materiales.Type = (string)(dataRowOrdenes["MaterialType"]);
+                            Materiales.Material = (string)(dataRowOrdenes["Material"]);
                             Materiales.Qty = Convert.ToInt32(dataRowOrdenes["QtyMaterial"]);
                         }
 
@@ -68,19 +69,19 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         {
                             Tallos = new OrderFlowerDetails();
                             Tallos.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaTallos"]);
-                            Tallos.Type = Convert.ToString(dataRowOrdenes["FlowerType"]);
-                            Tallos.Category = Convert.ToString(dataRowOrdenes["CategoriasFlor"]);
-                            Tallos.Color = Convert.ToString(dataRowOrdenes["Colores"]);
-                            Tallos.Flower = Convert.ToString(dataRowOrdenes["Tallo"]);
+                            Tallos.Type = (string)(dataRowOrdenes["FlowerType"]);
+                            Tallos.Category = (string)(dataRowOrdenes["CategoriasFlor"]);
+                            Tallos.Color = (string)(dataRowOrdenes["Colores"]);
+                            Tallos.Flower = (string)(dataRowOrdenes["Tallo"]);
                             Tallos.Qty = Convert.ToInt32(dataRowOrdenes["QtyTallos"]);
-                            Tallos.Grade = Convert.ToString(dataRowOrdenes["GradosFlor"]);
-                            Tallos.Quality = Convert.ToString(dataRowOrdenes["Quality"]);
-                            Tallos.Treatment = Convert.ToString(dataRowOrdenes["TratamientosFlor"]);
-                            Tallos.BloomCount = Convert.ToString(dataRowOrdenes["BloomCount"]);
-                            Tallos.TreatmentTechnique = Convert.ToString(dataRowOrdenes["TecnicaTratamiento"]);
-                            Tallos.TinctureTones = Convert.ToString(dataRowOrdenes["TonosTintura"]);
-                            Tallos.TinctureBase = Convert.ToString(dataRowOrdenes["FloresBaseTintura"]);
-                            Tallos.GlitterType = Convert.ToString(dataRowOrdenes["GlitterType"]);
+                            Tallos.Grade = (string)(dataRowOrdenes["GradosFlor"]);
+                            Tallos.Quality = (string)(dataRowOrdenes["Quality"]);
+                            Tallos.Treatment = (string)(dataRowOrdenes["TratamientosFlor"]);
+                            Tallos.BloomCount = (string)(dataRowOrdenes["BloomCount"]);
+                            Tallos.TreatmentTechnique = (string)(dataRowOrdenes["TecnicaTratamiento"]);
+                            Tallos.TinctureTones = (string)(dataRowOrdenes["TonosTintura"]);
+                            Tallos.TinctureBase = (string)(dataRowOrdenes["FloresBaseTintura"]);
+                            Tallos.GlitterType = (string)(dataRowOrdenes["GlitterType"]);
                             Tallos.QualityCode = Convert.ToInt32(dataRowOrdenes["IDQuality"]);
                             Tallos.TypeCode = Convert.ToInt32(dataRowOrdenes["IDFlowerType"]);
                             Tallos.ColorCode = Convert.ToInt32(dataRowOrdenes["IDColores"]);
@@ -94,12 +95,12 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         {
                             Ramos = new OrderBunchDetails();
                             Ramos.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaRamo"]);
-                            Ramos.Bunch = Convert.ToString(dataRowOrdenes["Ramo"]);
+                            Ramos.Bunch = (string)(dataRowOrdenes["Ramo"]);
                             Ramos.Qty = Convert.ToInt32(dataRowOrdenes["QtyRamos"]);
-                            Ramos.AssemblyType = Convert.ToString(dataRowOrdenes["TiposEnsambleRamos"]);
-                            Ramos.Length = Convert.ToString(dataRowOrdenes["LongitudRamo"]);
+                            Ramos.AssemblyType = (string)(dataRowOrdenes["TiposEnsambleRamos"]);
+                            Ramos.Length = (string)(dataRowOrdenes["LongitudRamo"]);
                             Ramos.Stems = Convert.ToInt32(dataRowOrdenes["TallosxRamo"]);
-                            Ramos.UPCName = Convert.ToString(dataRowOrdenes["UPCName"]);
+                            Ramos.UPCName = (string)(dataRowOrdenes["UPCName"]);
                             Ramos.Flowers = new List<OrderFlowerDetails>();
                             Ramos.Materials = new List<OrderMaterialDetails>();
                             Ramos.AssemblyTypeCode = Convert.ToInt32(dataRowOrdenes["IDTiposEnsambleRamos"]);
@@ -134,8 +135,8 @@ namespace IntegrationAPIs.Bussines.Ordenes
                                 DetallesMateriales = new OrderMaterialDetails();
                                 DetallesMateriales.ID = Convert.ToInt32(dataRowOrdenes["IDRecetaMaterialCaja"]);
                                 DetallesMateriales.MaterialCode = Convert.ToInt32(dataRowOrdenes["IDMaterialCaja"]);
-                                DetallesMateriales.Type = Convert.ToString(dataRowOrdenes["MaterialTypeCaja"]);
-                                DetallesMateriales.Material = Convert.ToString(dataRowOrdenes["MaterialCaja"]);
+                                DetallesMateriales.Type = (string)(dataRowOrdenes["MaterialTypeCaja"]);
+                                DetallesMateriales.Material = (string)(dataRowOrdenes["MaterialCaja"]);
                                 DetallesMateriales.Qty = Convert.ToInt32(dataRowOrdenes["QtyMaterialCaja"]);
                             }
                         }
@@ -145,27 +146,28 @@ namespace IntegrationAPIs.Bussines.Ordenes
                             OrdenesDetalles = new OrderDetails();
                             OrdenesDetalles.RegNumber = Convert.ToInt32(dataRowOrdenes["IDDetalles"]);
                             OrdenesDetalles.SeasonCode = Convert.ToInt32(dataRowOrdenes["IDTemporadasDetallesPO"]);
-                            OrdenesDetalles.Season = Convert.ToString(dataRowOrdenes["IDTemporadasDetallesPO_Nombre"]);
+                            OrdenesDetalles.Season = (string)(dataRowOrdenes["IDTemporadasDetallesPO_Nombre"]);
                             OrdenesDetalles.ModelCode = Convert.ToInt32(dataRowOrdenes["IDFloresRecetaModelos"]);
-                            OrdenesDetalles.CodeBoxProduct = Convert.ToString(dataRowOrdenes["CodProdComercial"]);
-                            OrdenesDetalles.BoxProduct = Convert.ToString(dataRowOrdenes["ProdComercial"]);
-                            OrdenesDetalles.BoxProductType = Convert.ToString(dataRowOrdenes["TipoProductoComercial"]);
+                            OrdenesDetalles.CodeBoxProduct = (string)(dataRowOrdenes["CodProdComercial"]);
+                            OrdenesDetalles.BoxProduct = (string)(dataRowOrdenes["ProdComercial"]);
+                            OrdenesDetalles.BoxProductType = (string)(dataRowOrdenes["TipoProductoComercial"]);
                             OrdenesDetalles.Pack = Convert.ToInt32(dataRowOrdenes["Pack"]);
                             OrdenesDetalles.Qty = Convert.ToInt32(dataRowOrdenes["Qty"]);
                             OrdenesDetalles.QtyConfirmed = Convert.ToInt32(dataRowOrdenes["QtyConfirmed"]); 
                             OrdenesDetalles.Stems = Convert.ToInt32(dataRowOrdenes["Stems"]);
                             OrdenesDetalles.BoxCode = Convert.ToInt32(dataRowOrdenes["IDBox"]);
-                            OrdenesDetalles.Box = Convert.ToString(dataRowOrdenes["IDBox_Nombre"]);
+                            OrdenesDetalles.Box = (string)(dataRowOrdenes["IDBox_Nombre"]);
                             OrdenesDetalles.UnitCost = Convert.ToDecimal(dataRowOrdenes["UnitCost"]);
                             OrdenesDetalles.TotalCost = Convert.ToDecimal(dataRowOrdenes["TotalCost"]);
-                            OrdenesDetalles.PullDateWithFormat = Convert.ToString(dataRowOrdenes["PullDateWithFormat"]);
-                            OrdenesDetalles.UPC = Convert.ToString(dataRowOrdenes["UPC"]);
+                            OrdenesDetalles.PullDateWithFormat = (string)(dataRowOrdenes["PullDateWithFormat"]);
+                            OrdenesDetalles.UPC = (string)(dataRowOrdenes["UPC"]);
                             OrdenesDetalles.UPCRetailPrice = Convert.ToDecimal(dataRowOrdenes["UPCRetailPrice"]);
                             OrdenesDetalles.TimeStampMaster = Convert.ToDateTime(dataRowOrdenes["TimeStampMaster"]).ToString("MM-dd-yyyy HH:mm:ss");
                             OrdenesDetalles.TimeStampRecipe = Convert.ToDateTime(dataRowOrdenes["TimeStampRecipe"]).ToString("MM-dd-yyyy HH:mm:ss");
-                            OrdenesDetalles.ReasonChange = Convert.ToString(dataRowOrdenes["MotivoCambio"]);
-                            OrdenesDetalles.Wet = Convert.ToString(dataRowOrdenes["Wet"]);
-                            OrdenesDetalles.Maritime = Convert.ToString(dataRowOrdenes["Container"]);
+                            OrdenesDetalles.ReasonChange = (string)(dataRowOrdenes["MotivoCambio"]);
+                            OrdenesDetalles.Wet = (string)(dataRowOrdenes["Wet"]);
+                            OrdenesDetalles.Maritime = (string)(dataRowOrdenes["Container"]);
+                            OrdenesDetalles.SemaphoreSubs = Convert.ToInt32(dataRowOrdenes["NivelSustitucion"]);
                             OrdenesDetalles.Bunches = new List<OrderBunchDetails>();
                             OrdenesDetalles.Materials = new List<OrderMaterialDetails>();
 
@@ -199,17 +201,17 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         {
                             Ordenes = new Orders();
                             Ordenes.ID = Convert.ToInt32(dataRowOrdenes["ID"]);
-                            Ordenes.PO = Convert.ToString(dataRowOrdenes["PO"]);
+                            Ordenes.PO = (string)(dataRowOrdenes["PO"]);
                             Ordenes.OrderCode = Convert.ToInt32(dataRowOrdenes["Codigo"]);
-                            Ordenes.Type = Convert.ToString(dataRowOrdenes["TipoDocumento"]);
+                            Ordenes.Type = (string)(dataRowOrdenes["TipoDocumento"]);
                             Ordenes.FarmShipDate = Convert.ToDateTime(dataRowOrdenes["FarmShipDate"]).ToString("MM-dd-yyyy");
                             Ordenes.MiamiShipDate = Convert.ToDateTime(dataRowOrdenes["MiamiShipDate"]).ToString("MM-dd-yyyy");
                             Ordenes.DeliveryDate = Convert.ToDateTime(dataRowOrdenes["DeliveryDate"]).ToString("MM-dd-yyyy");
-                            Ordenes.Status = Convert.ToString(dataRowOrdenes["EstadoFinca"]);
+                            Ordenes.Status = (string)(dataRowOrdenes["EstadoFinca"]);
                             Ordenes.PullDate = Convert.ToDateTime(dataRowOrdenes["PullDate"]).ToString("MM-dd-yyyy");
                             Ordenes.CustomerCode = Convert.ToInt32(dataRowOrdenes["IDClientes_Codigo"]);
-                            Ordenes.Customer = Convert.ToString(dataRowOrdenes["IDClientes_Nombre"]);
-                            Ordenes.Farm = Convert.ToString(dataRowOrdenes["Farm"]);
+                            Ordenes.Customer = (string)(dataRowOrdenes["IDClientes_Nombre"]);
+                            Ordenes.Farm = (string)(dataRowOrdenes["Farm"]);
                             Ordenes.Details = new List<OrderDetails>();
 
                             if (OrdenesDetalles != null)
@@ -362,7 +364,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                 {
                     codigoOrden = prmOrderRequest.OrderCode;
                 }
-
+                pendingOrders = prmOrderRequest.PendingOrders != null && prmOrderRequest.PendingOrders.ToUpper() == "SI" ? 1 : 0;
             }
             catch (Exception ex)
             {

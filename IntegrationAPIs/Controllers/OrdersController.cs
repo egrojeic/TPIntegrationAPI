@@ -106,7 +106,7 @@ namespace IntegrationAPIs.Controllers
                 Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Error, "ERROR EN API Orders/Confirmation " + tmpFarm, ex.Message);
             }
 
-            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(Message), tmpFarm + "OrdersConfirm", 1);
+            Common.CreateTrace.WriteLogJson(JsonConvert.SerializeObject(Message), tmpFarm + "ResponseOrdersConfirm", 1);
             return Message;
 
         }

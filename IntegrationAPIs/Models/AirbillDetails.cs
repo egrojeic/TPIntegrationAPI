@@ -30,6 +30,6 @@ namespace IntegrationAPIs.Models
         [Range(1,99999, ErrorMessage = "Length TrackBoxCode Invalid")]
         public int TrackBoxCode { get; set; }
         public decimal Cost { get; set; }
-        public int Invoice { get; set; }
+        public string Invoice { get; set; }
     }
 }

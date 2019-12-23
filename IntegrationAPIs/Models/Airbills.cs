@@ -16,7 +16,6 @@ namespace IntegrationAPIs.Models
         public string AirlineCode { get; set; }
         public string Airline { get; set; }
         public string Farm { get; set; }
-        [Required]
         public string FarmInvoice { get; set; }
         public string HAWB { get; set; }
         [Required]

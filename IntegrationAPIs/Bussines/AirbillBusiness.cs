@@ -37,7 +37,7 @@ namespace IntegrationAPIs.Bussines
                 int tmpPack;
                 int tmpQty;
                 string tmpCost;
-                int tmpInvoice;
+                string tmpInvoice;
                 int tmpCompanyCode;
                 int tmpTrackBoxCode;
 
@@ -77,7 +77,7 @@ namespace IntegrationAPIs.Bussines
                                 tmpCompanyCode = prmAirbillRequest.Airbills[i].Details[j].CompanyCode;
                                 tmpTrackBoxCode = prmAirbillRequest.Airbills[i].Details[j].TrackBoxCode;
 
-                                strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBoxCode + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ", " + tmpInvoice + ", " + tmpCompanyCode + ", " + tmpTrackBoxCode + ")";
+                                strSQL = "INSERT INTO tmpAirbillDetailsAPI VALUES(" + tmpIDAirbill + ", " + tmpOrderCode + ", " + tmpCustomerCode + ", '" + tmpCustomer + "', '" + tmpCodeBoxProduct + "', '" + tmpBoxedProduct + "', '" + tmpBoxCode + "', " + tmpPack + ", " + tmpQty + ", " + tmpCost + ", '" + tmpInvoice + "', " + tmpCompanyCode + ", " + tmpTrackBoxCode + ")";
                                 SQLConection.ExecuteCRUD(strSQL);
                             }
 

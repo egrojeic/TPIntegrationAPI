@@ -55,23 +55,24 @@ namespace IntegrationAPIs.Bussines
                             CreditosDetalles.Qty = Convert.ToInt32(dataRowCreditos["Cantidad"]);
                             CreditosDetalles.UnitPrice = Convert.ToDecimal(dataRowCreditos["PrecioUnit"]);
                             CreditosDetalles.AdditionalCreditValue = Convert.ToDecimal(dataRowCreditos["ValorAdicionalCredito"]);
-                            CreditosDetalles.Invoice = Convert.ToInt32(dataRowCreditos["NumFactura"]);
+                            CreditosDetalles.Invoice = Convert.ToString(dataRowCreditos["NumFactura"]);
                             CreditosDetalles.CompanyCode = Convert.ToInt32(dataRowCreditos["CompanyCode"]);
                             CreditosDetalles.SeasonCode = Convert.ToInt32(dataRowCreditos["IDTemporadasDetallesPO"]);
                             CreditosDetalles.CustomerCode = Convert.ToInt32(dataRowCreditos["IDClientes_Codigo"]);
                             CreditosDetalles.CodeBoxProduct = Convert.ToString(dataRowCreditos["CodProdComercial"]);
                             CreditosDetalles.ModelCode = Convert.ToInt32(dataRowCreditos["IDFloresRecetaModelos"]);
                             CreditosDetalles.TrackBoxCode = Convert.ToInt32(dataRowCreditos["CodCaja"]);
+                            CreditosDetalles.Reason = Convert.ToString(dataRowCreditos["BAS_MotivosCreditos"]);
                         }
                         
                         if (Creditos == null)
                         {
                             Creditos = new CreditNotes();
                             Creditos.ID = Convert.ToInt32(dataRowCreditos["ID"]);
+                            Creditos.TypeDoc = dataRowCreditos["TipoNotaCredito"].ToString();
                             Creditos.Code = Convert.ToInt32(dataRowCreditos["Codigo"]);
                             Creditos.Date = Convert.ToDateTime(dataRowCreditos["Fecha"]).ToString("MM-dd-yyyy");
                             Creditos.Status = Convert.ToString(dataRowCreditos["Estado"]);
-                            Creditos.Reason = Convert.ToString(dataRowCreditos["BAS_MotivosCreditos"]);
                             Creditos.Airbill = Convert.ToString(dataRowCreditos["CodAirBill"]);
                             Creditos.TotalValue = Convert.ToDecimal(dataRowCreditos["ValorTotal"]);
                             Creditos.Details = new List<CreditNotesDetails>();
