@@ -15,6 +15,8 @@ namespace IntegrationAPIs.Bussines.Ordenes
         string fechaFinal = "1900/01/01";
         int codigoOrden = 0;
         int pendingOrders = 0;
+        int sustituciones = 0;
+        int sustitucionFinca = 0;
 
         public OrdersResponse GetOrders(string prmFarm, OrdersRequest prmOrderRequest)
         {
@@ -34,7 +36,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                 List<OrderMaterialDetails> LstMateriales = new List<OrderMaterialDetails>();
                 List<OrderFlowerDetails> LstTallos = new List<OrderFlowerDetails>();
 
-                strSQL = "EXEC ConsultaOrdenesAPI '" + prmFarm + "', '" + fechaInicial + "' , '" + fechaFinal + "', " + codigoOrden + ", " + pendingOrders;
+                strSQL = "EXEC ConsultaOrdenesAPI '" + prmFarm + "', '" + fechaInicial + "' , '" + fechaFinal + "', " + codigoOrden + ", " + pendingOrders + ", " + sustituciones + ", " + sustitucionFinca;
                 dsOrdenes = SQLConection.ExecuteProcedureToDataSet(strSQL);
 
                 if (dsOrdenes != null && dsOrdenes.Tables[0].Rows.Count > 0)
@@ -237,9 +239,12 @@ namespace IntegrationAPIs.Bussines.Ordenes
                 }
                 else
                 {
+                    string tmpMensaje = "";
+                    tmpMensaje = sustituciones == 0 ? "No Existen Ordenes de Produccion" : "No Existen Ordenes con Sustituciones Realizadas";
+
                     ResponseOrders.Response.StatusCode = "200";
-                    ResponseOrders.Response.Message = "No Existen Ordenes de Produccion";
-                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", "No Existen Ordenes de Produccion - " + strSQL);
+                    ResponseOrders.Response.Message = tmpMensaje;
+                    Common.CreateTrace.WriteLogToDB(Common.CreateTrace.LogLevel.Information, "CAPA DE NEGOCIO OrdersBusiness:GetOrders", tmpMensaje + "- " + strSQL);
                 }
             }
             catch (Exception ex)
@@ -365,6 +370,9 @@ namespace IntegrationAPIs.Bussines.Ordenes
                     codigoOrden = prmOrderRequest.OrderCode;
                 }
                 pendingOrders = prmOrderRequest.PendingOrders != null && prmOrderRequest.PendingOrders.ToUpper() == "SI" ? 1 : 0;
+                sustituciones = prmOrderRequest.Substitutions != null && prmOrderRequest.Substitutions.ToUpper() == "SI" ? 1 : 0;
+                sustitucionFinca = prmOrderRequest.SubstitutionFarm != null && prmOrderRequest.SubstitutionFarm.ToUpper() == "SI" ? 1 : 0;
+
             }
             catch (Exception ex)
             {

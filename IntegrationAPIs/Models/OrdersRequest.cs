@@ -14,6 +14,8 @@ namespace IntegrationAPIs.Models
         public DateTime FinalDate { get; set; }
         public int OrderCode { get; set; }
         public string PendingOrders { get; set; }
+        public string Substitutions { get; set; }
+        public string SubstitutionFarm { get; set; }
     }
 
     public class OrdersConfirmRequest
