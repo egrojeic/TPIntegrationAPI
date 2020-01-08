@@ -12,6 +12,7 @@ namespace IntegrationAPIs.Models
         [JsonIgnore]
         public int ID;
         public string PO;
+        public int CustomerOrderCode;
         [Required]
         public int OrderCode;
         public string Type;

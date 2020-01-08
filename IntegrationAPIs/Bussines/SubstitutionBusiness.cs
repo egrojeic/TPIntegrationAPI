@@ -71,6 +71,7 @@ namespace IntegrationAPIs.Bussines
                         {
                             Sustituciones = new Substitutions();
                             Sustituciones.ID = Convert.ToInt32(dataRowSustituciones["ID"]);
+                            Sustituciones.CustomerOrderCode = Convert.ToInt32(dataRowSustituciones["CustomerOrderCode"]);
                             Sustituciones.PO = (string)(dataRowSustituciones["PO"]);
                             Sustituciones.OrderCode = Convert.ToInt32(dataRowSustituciones["Codigo"]);
                             Sustituciones.Type = (string)(dataRowSustituciones["TipoDocumento"]);
@@ -235,6 +236,8 @@ namespace IntegrationAPIs.Bussines
                         Sustituciones.Box = (string)(dataRowSustituciones["IDBox_Nombre"]);
                         Sustituciones.Approved = (string)(dataRowSustituciones["Aprobado"]);
                         Sustituciones.Revised = (string)(dataRowSustituciones["Revisado"]);
+                        Sustituciones.SubstitutionFarm = (string)(dataRowSustituciones["SustitucionFinca"]);
+                        Sustituciones.SubstitutionDone = (string)(dataRowSustituciones["SustitucionRealizada"]);
                         LstSustConfirm.Add(Sustituciones);
                     }
 

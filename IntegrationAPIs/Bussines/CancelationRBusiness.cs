@@ -49,7 +49,7 @@ namespace IntegrationAPIs.Bussines
                         Cancelaciones.MiamiShipDate = Convert.ToDateTime(dataRowCancelaciones["MiamiShipDate"]).ToString("MM-dd-yyyy");
                         Cancelaciones.CustomerCode = Convert.ToInt32(dataRowCancelaciones["IDClientes_Codigo"]);
                         Cancelaciones.Customer = (string)(dataRowCancelaciones["IDClientes_Nombre"]);
-
+                        Cancelaciones.CustomerOrderCode = Convert.ToInt32(dataRowCancelaciones["CustomerOrderCode"]);
                         LstCancelations.Add(Cancelaciones);
                     }
 

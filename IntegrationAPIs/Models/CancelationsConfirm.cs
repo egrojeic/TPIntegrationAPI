@@ -9,6 +9,7 @@ namespace IntegrationAPIs.Models
     public class CancelationsConfirm
     {
         public string PO;
+        public int CustomerOrderCode;
         public int OrderCode;
         public string FarmShipDate;
         public string MiamiShipDate;

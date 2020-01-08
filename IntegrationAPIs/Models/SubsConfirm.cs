@@ -33,6 +33,8 @@ namespace IntegrationAPIs.Models
         public string Revised;
         [Required]
         public string Approved;
+        public string SubstitutionFarm { get; set; }
+        public string SubstitutionDone { get; set; }
     }
 
     public class SubsConfirmRequest

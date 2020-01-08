@@ -203,6 +203,7 @@ namespace IntegrationAPIs.Bussines.Ordenes
                         {
                             Ordenes = new Orders();
                             Ordenes.ID = Convert.ToInt32(dataRowOrdenes["ID"]);
+                            Ordenes.CustomerOrderCode = Convert.ToInt32(dataRowOrdenes["CustomerOrderCode"]);
                             Ordenes.PO = (string)(dataRowOrdenes["PO"]);
                             Ordenes.OrderCode = Convert.ToInt32(dataRowOrdenes["Codigo"]);
                             Ordenes.Type = (string)(dataRowOrdenes["TipoDocumento"]);
